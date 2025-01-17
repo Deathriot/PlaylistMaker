@@ -1,19 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/blue"
+    android:orientation="vertical"
+    android:padding="@dimen/normal_padding"
+    android:id="@+id/main">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="start"
+        android:gravity="start"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="@dimen/primary_text_size"
+        android:textStyle="bold" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="@dimen/normal_padding"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_search"
+            android:minHeight="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginVertical="@dimen/normal_button_margin"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/search_btn"
+            android:textColor="@color/black"
+            android:textSize="@dimen/primary_text_size"
+            app:backgroundTint="@color/white"
+            app:cornerRadius="@dimen/normal_button_radius"
+            app:icon="@drawable/baseline_search_24"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/icon_padding"
+            app:iconTint="@color/black" />
+
+        <Button
+            android:id="@+id/btn_media_lib"
+            android:minHeight="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginVertical="@dimen/normal_button_margin"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:gravity="center"
+            android:text="@string/media_library_btn"
+            android:textColor="@color/black"
+            android:textSize="@dimen/primary_text_size"
+            app:cornerRadius="@dimen/normal_button_radius"
+            app:icon="@drawable/media_21x20"
+            app:iconGravity="textStart"
+            app:iconTint="@color/black"
+            app:iconPadding="@dimen/icon_padding"/>
+
+        <Button
+            android:id="@+id/btn_settings"
+            android:minHeight="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginVertical="@dimen/normal_button_margin"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:gravity="center"
+            android:text="@string/settings_btn"
+            android:textColor="@color/black"
+            android:textSize="@dimen/primary_text_size"
+            app:cornerRadius="@dimen/normal_button_radius"
+            app:icon= "@drawable/settings_20x20"
+            app:iconGravity="textStart"
+            app:iconTint="@color/black"
+            app:iconPadding="@dimen/icon_padding"/>
+
+    </LinearLayout>
+</LinearLayout>
+
