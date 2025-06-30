@@ -1,10 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical"
     tools:context=".SearchActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/settings_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="start"
+            android:src="@drawable/arrow_back_24x24"
+            app:backgroundTint="?attr/colorSecondary" />
+
+        <TextView
+            style="@style/Medium_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingStart="@dimen/normal_padding"
+            android:paddingEnd="@dimen/normal_padding"
+            android:text="@string/search_hint"
+            android:textColor="?attr/colorOnSecondary" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@drawable/search_edit_text_shape"
+        android:layout_marginHorizontal="@dimen/normal_padding"
+        android:layout_marginVertical="@dimen/minor_padding">
+
+        <EditText
+            android:id="@+id/search_edit_text"
+            style="@style/Search_edit_text_style"
+
+            android:padding="@dimen/minor_padding"
+            android:layout_marginHorizontal="@dimen/minor_padding"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:background="@null"
+            android:cursorVisible="true"
+            android:drawableStart="@drawable/search_icon_16x16"
+            android:drawablePadding="@dimen/minor_padding"
+
+            android:hint="@string/search_hint"
+            android:inputType="text"
+            android:lines="1"
+            android:maxLength="15"
+
+            android:textColor="@color/black"
+            android:textCursorDrawable="@drawable/cursor" />
+
+        <ImageButton
+            android:id="@+id/btn_clear_text_search"
+
+            style="Text_clear_search"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="@dimen/normal_padding"
+            android:background="@drawable/close_button_search"
+            android:visibility="invisible"/>
+
+    </FrameLayout>
+
+</LinearLayout>
