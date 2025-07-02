@@ -11,12 +11,15 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-
 class SearchActivity : AppCompatActivity() {
+    companion object{
+        const val editTextKey = "editText"
+        val editTextDefault = ""
+        var editTextValue = ""
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_search)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -27,10 +30,22 @@ class SearchActivity : AppCompatActivity() {
 
         val editText = findViewById<EditText>(R.id.search_edit_text)
         val clearBtn = findViewById<ImageButton>(R.id.btn_clear_text_search)
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        val backBtn = findViewById<ImageButton>(R.id.btn_settings_back)
+
+        backBtn.setOnClickListener({
+            finish()
+        })
+
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+
+        if(savedInstanceState != null){
+            editText.setText(editTextValue)
+        }
 
         clearBtn.setOnClickListener({
             editText.setText("")
+            editTextValue = ""
             inputMethodManager?.hideSoftInputFromWindow(editText.windowToken, 0)
         })
 
@@ -42,7 +57,9 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearBtn.visibility = setButtonVisibility(s)
 
-
+                if (!s.isNullOrEmpty()) {
+                    editTextValue = s.toString()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -53,7 +70,22 @@ class SearchActivity : AppCompatActivity() {
         editText.addTextChangedListener(textWatcher)
     }
 
-    private fun setButtonVisibility(s : CharSequence?) :Int{
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(editTextKey, editTextValue)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val editText = findViewById<EditText>(R.id.search_edit_text)
+        editText.setText(editTextValue)
+    }
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        editTextValue = savedInstanceState.getString(editTextKey, editTextDefault)
+    }
+
+    private fun setButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
             View.INVISIBLE
         } else {

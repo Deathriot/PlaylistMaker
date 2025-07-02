@@ -30,7 +30,6 @@ class SettingsActivity : AppCompatActivity() {
     private fun setIntents() {
         val btnBack = findViewById<ImageButton>(R.id.settings_back)
         btnBack.setOnClickListener {
-            println("Touched")
             finish()
         }
 
