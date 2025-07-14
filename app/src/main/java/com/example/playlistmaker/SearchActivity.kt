@@ -8,15 +8,13 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 class SearchActivity : AppCompatActivity() {
-    companion object{
-        const val editTextKey = "editText"
-        val editTextDefault = ""
-        var editTextValue = ""
-    }
+
+    var editTextValue = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +27,7 @@ class SearchActivity : AppCompatActivity() {
 
 
         val editText = findViewById<EditText>(R.id.search_edit_text)
-        val clearBtn = findViewById<ImageButton>(R.id.btn_clear_text_search)
+        val clearBtn = findViewById<ImageView>(R.id.btn_clear_text_search)
         val backBtn = findViewById<ImageButton>(R.id.btn_settings_back)
 
         backBtn.setOnClickListener({
@@ -82,7 +80,7 @@ class SearchActivity : AppCompatActivity() {
     }
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        editTextValue = savedInstanceState.getString(editTextKey, editTextDefault)
+        editTextValue = savedInstanceState.getString(editTextKey, "")
     }
 
     private fun setButtonVisibility(s: CharSequence?): Int {
@@ -91,5 +89,9 @@ class SearchActivity : AppCompatActivity() {
         } else {
             View.VISIBLE
         }
+    }
+
+    companion object{
+        const val editTextKey = "editText"
     }
 }

@@ -26,23 +26,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun setDefaultInteractions() {
         val settingsBtn = findViewById<Button>(R.id.btn_settings)
-        val settingsIntent = Intent(this@MainActivity, SettingsActivity::class.java)
 
         settingsBtn.setOnClickListener {
+            val settingsIntent = Intent(this@MainActivity, SettingsActivity::class.java)
             startActivity(settingsIntent)
         }
 
         val mediaBtn = findViewById<Button>(R.id.btn_media_lib)
-        val mediaIntent = Intent(this@MainActivity, MediaActivity::class.java)
 
         mediaBtn.setOnClickListener {
+            val mediaIntent = Intent(this@MainActivity, MediaActivity::class.java)
             startActivity(mediaIntent)
         }
 
         val searchBtn = findViewById<Button>(R.id.btn_search)
-        val searchIntent = Intent(this@MainActivity, SearchActivity::class.java)
 
         searchBtn.setOnClickListener {
+            val searchIntent = Intent(this@MainActivity, SearchActivity::class.java)
             startActivity(searchIntent)
         }
     }

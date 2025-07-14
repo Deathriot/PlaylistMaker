@@ -38,7 +38,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(
                 Intent.createChooser(
                     createShareIntent(),
-                    "https://practicum.yandex.ru/profile/android-developer-plus/"
+                    R.string.share_title.toString()
                 )
             )
         }
@@ -67,16 +67,16 @@ class SettingsActivity : AppCompatActivity() {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = "text/plain"
         shareIntent.putExtra(
-            Intent.EXTRA_TEXT, "https://practicum.yandex.ru/profile/android-developer-plus"
+            Intent.EXTRA_TEXT, R.string.share_url.toString()
         )
 
         return shareIntent
     }
 
     private fun createEmailIntent(): Intent {
-        val email = "kulkukumber@yandex.ru";
-        val subject = "Сообщение разработчикам и разработчицам приложения Playlist Maker";
-        val body = "Спасибо разработчикам и разработчицам за крутое приложение!";
+        val email = R.string.email_name
+        val subject = R.string.email_title
+        val body = R.string.email_message
 
         val emailIntent = Intent(Intent.ACTION_SENDTO);
 
@@ -88,7 +88,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun createUserAgreementIntent(): Intent {
-        val url = "https://yandex.ru/legal/practicum_offer/"
+        val url = R.string.user_agreement_url.toString()
         val agreementIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         return agreementIntent
     }

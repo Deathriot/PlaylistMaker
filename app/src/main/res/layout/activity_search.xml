@@ -38,34 +38,33 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:background="@drawable/search_edit_text_shape"
-        android:layout_marginHorizontal="@dimen/normal_padding"
-        android:layout_marginVertical="@dimen/minor_padding">
+        android:layout_marginHorizontal="@dimen/minor_padding"
+        android:layout_marginVertical="@dimen/minor_padding"
+        android:background="@drawable/search_edit_text_shape">
 
         <EditText
             android:id="@+id/search_edit_text"
             style="@style/Search_edit_text_style"
 
-            android:padding="@dimen/minor_padding"
-            android:layout_marginHorizontal="@dimen/minor_padding"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/normal_padding"
             android:background="@null"
-            android:cursorVisible="true"
+
             android:drawableStart="@drawable/search_icon_16x16"
             android:drawablePadding="@dimen/minor_padding"
-
             android:hint="@string/search_hint"
+
             android:inputType="text"
             android:lines="1"
             android:maxLength="15"
+            android:paddingVertical="@dimen/minor_padding"
 
             android:textColor="@color/black"
             android:textCursorDrawable="@drawable/cursor" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_clear_text_search"
 
             style="Text_clear_search"
