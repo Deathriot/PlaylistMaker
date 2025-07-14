@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="primary_text_size">24sp</dimen>
+    <dimen name="primary_text_size">22sp</dimen>
     <dimen name="minor_text_size">16sp</dimen>
     <dimen name="normal_padding">14dp</dimen>
     <dimen name="minor_padding">8dp</dimen>

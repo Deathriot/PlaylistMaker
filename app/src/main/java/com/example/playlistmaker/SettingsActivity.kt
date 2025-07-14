@@ -45,7 +45,11 @@ class SettingsActivity : AppCompatActivity() {
 
         val btnEmail = findViewById<Button>(R.id.btn_support)
         btnEmail.setOnClickListener {
-            startActivity((createEmailIntent()))
+            startActivity(
+                Intent.createChooser(
+                    createEmailIntent(),
+                    R.string.contact_support.toString())
+                )
         }
 
         val btnBrowser = findViewById<Button>(R.id.btn_user_agreement)
