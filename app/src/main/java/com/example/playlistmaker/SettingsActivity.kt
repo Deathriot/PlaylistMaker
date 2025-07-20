@@ -23,7 +23,6 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-
         setIntents()
     }
 
@@ -38,7 +37,7 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(
                 Intent.createChooser(
                     createShareIntent(),
-                    R.string.share_title.toString()
+                    getString(R.string.share_title)
                 )
             )
         }
@@ -48,8 +47,9 @@ class SettingsActivity : AppCompatActivity() {
             startActivity(
                 Intent.createChooser(
                     createEmailIntent(),
-                    R.string.contact_support.toString())
+                    getString(R.string.contact_support)
                 )
+            )
         }
 
         val btnBrowser = findViewById<Button>(R.id.btn_user_agreement)
@@ -71,20 +71,21 @@ class SettingsActivity : AppCompatActivity() {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = "text/plain"
         shareIntent.putExtra(
-            Intent.EXTRA_TEXT, R.string.share_url.toString()
+            Intent.EXTRA_TEXT, getString(R.string.share_url)
         )
 
         return shareIntent
     }
 
     private fun createEmailIntent(): Intent {
-        val email = R.string.email_name
-        val subject = R.string.email_title
-        val body = R.string.email_message
+        val email = getString(R.string.email_name)
+        val subject = getString(R.string.email_title)
+        val body = getString(R.string.email_message)
 
         val emailIntent = Intent(Intent.ACTION_SENDTO);
 
-        emailIntent.setData(Uri.parse("mailto:$email"));
+        emailIntent.data = Uri.parse("mailto:");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
         emailIntent.putExtra(Intent.EXTRA_TEXT, body);
 
@@ -92,7 +93,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun createUserAgreementIntent(): Intent {
-        val url = R.string.user_agreement_url.toString()
+        val url = getString(R.string.user_agreement_url)
         val agreementIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
         return agreementIntent
     }

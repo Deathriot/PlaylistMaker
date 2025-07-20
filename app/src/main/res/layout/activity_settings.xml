@@ -44,15 +44,11 @@
             android:id="@+id/theme_switcher"
             style="@style/Settings_switch_style"
 
-
-
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingVertical="@dimen/settings_vertical_switch_padding"
             android:paddingStart="@dimen/normal_padding"
             android:paddingEnd="@dimen/normal_padding"
-
 
             android:text="@string/dark_theme"
             android:textAlignment="textStart"
