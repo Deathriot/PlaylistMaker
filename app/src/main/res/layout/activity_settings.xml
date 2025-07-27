@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/settings"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/settings_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:src="@drawable/arrow_back_24x24"
+            app:backgroundTint="?attr/colorSecondary" />
+
+        <TextView
+            style="@style/Medium_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingStart="@dimen/normal_padding"
+            android:paddingEnd="@dimen/normal_padding"
+            android:text="@string/settings_btn"
+            android:textColor="?attr/colorOnSecondary" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/normal_padding">
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/theme_switcher"
+            style="@style/Settings_switch_style"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/settings_vertical_switch_padding"
+            android:paddingStart="@dimen/normal_padding"
+            android:paddingEnd="@dimen/normal_padding"
+
+            android:text="@string/dark_theme"
+            android:textAlignment="textStart"
+            android:textColor="?attr/colorOnSecondary" />
+
+        <Button
+            android:id="@+id/btn_share"
+            style="@style/Settings_button_style"
+            android:text="@string/share_app"
+            app:icon="@drawable/share" />
+
+        <Button
+            android:id="@+id/btn_support"
+            style="@style/Settings_button_style"
+            android:text="@string/contact_support"
+            app:icon="@drawable/support" />
+
+        <Button
+            android:id="@+id/btn_user_agreement"
+            style="@style/Settings_button_style"
+            android:text="@string/user_agreement"
+            app:icon="@drawable/mini_arrow" />
+    </LinearLayout>
+</LinearLayout>

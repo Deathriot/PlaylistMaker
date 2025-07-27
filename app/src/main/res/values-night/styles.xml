@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Settings_switch_style" parent="Regular_text_style">
+        <item name="thumbTint">@color/blue</item>
+        <item name="trackTint">@color/light_blue</item>
+    </style>
+
+    <style name="Search_edit_text_style" parent="Regular_text_style">
+        <item name="drawableTint">@color/black</item>
+        <item name="android:textColorHint">@color/black</item>
+    </style>
+
+    <style name="Settings_button_style" parent="Widget.AppCompat.Button.Borderless">
+        <item name="iconGravity">end</item>
+        <item name="android:paddingHorizontal">@dimen/normal_padding</item>
+        <item name="android:paddingVertical">@dimen/settings_vertical_button_padding</item>
+        <item name="cornerRadius">0dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="iconTint">@color/white</item>
+        <item name="backgroundTint">?attr/colorSecondary</item>
+
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:textSize">@dimen/minor_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">400</item>
+        <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="Text_clear_search">
+        <item name="backgroundTint">@color/black</item>
+    </style>
+</resources>
