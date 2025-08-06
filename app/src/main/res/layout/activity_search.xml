@@ -6,7 +6,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSecondary"
+    android:backgroundTint="?attr/colorSecondary"
+    android:layout_marginHorizontal="@dimen/normal_padding"
     android:orientation="vertical"
     tools:context=".SearchActivity">
 
@@ -14,15 +15,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginVertical="@dimen/minor_padding">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/btn_settings_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="start"
             android:src="@drawable/arrow_back_24x24"
-            app:backgroundTint="?attr/colorSecondary" />
+            app:backgroundTint="?attr/colorSecondary"
+            android:paddingEnd="@dimen/minor_padding"/>
 
         <TextView
             style="@style/Medium_text_style"
@@ -38,7 +41,6 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/minor_padding"
         android:layout_marginVertical="@dimen/minor_padding"
         android:background="@drawable/search_edit_text_shape">
 
@@ -77,5 +79,14 @@
             android:visibility="invisible"/>
 
     </FrameLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_recycle_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/track"
+        tools:itemCount="15">
+    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

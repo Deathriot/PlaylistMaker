@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/minor_padding"
+    android:orientation="horizontal"
+    android:backgroundTint="?attr/colorOnSecondary">
+
+    <ImageView
+        android:id="@+id/track_image"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        tools:src="@drawable/ic_placeholder_45" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/minor_padding"
+        android:layout_marginStart="@dimen/minor_padding"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/track_title"
+            style="@style/Regular_text_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSecondary"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="No Reply" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/track_artist_name"
+                style="@style/Mini_regular_text_style"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                android:maxLines="1"
+                android:ellipsize="end"
+
+                tools:text="The Beatles" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_ellipse_3"
+                android:layout_gravity="center_vertical"
+                android:paddingHorizontal="@dimen/mini_padding"/>
+
+            <TextView
+                android:id="@+id/track_time"
+                style="@style/Mini_regular_text_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:textColor="@color/gray"
+                tools:text="3:43" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/mini_arrow" />
+
+</LinearLayout>

@@ -7,11 +7,14 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.RecyclerView
+import com.example.playlistmaker.model.Track
+import com.example.playlistmaker.util.SearchTrackAdapter
+
 class SearchActivity : AppCompatActivity() {
 
     var editTextValue = ""
@@ -28,16 +31,30 @@ class SearchActivity : AppCompatActivity() {
 
         val editText = findViewById<EditText>(R.id.search_edit_text)
         val clearBtn = findViewById<ImageView>(R.id.btn_clear_text_search)
-        val backBtn = findViewById<ImageButton>(R.id.btn_settings_back)
+        val backBtn = findViewById<ImageView>(R.id.btn_settings_back)
+        val recyclerView : RecyclerView = findViewById(R.id.search_recycle_view)
 
         backBtn.setOnClickListener({
             finish()
         })
 
+        setEditTextActions(savedInstanceState, editText, clearBtn)
+        setRecyclerView(recyclerView)
+    }
+
+    private fun setRecyclerView(recyclerView : RecyclerView){
+        val adapter = SearchTrackAdapter(Track.createMockList())
+        recyclerView.adapter = adapter
+    }
+    private fun setEditTextActions(
+        savedInstanceState: Bundle?,
+        editText: EditText,
+        clearBtn: ImageView
+    ) {
         val inputMethodManager =
             getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             editText.setText(editTextValue)
         }
 
@@ -78,6 +95,7 @@ class SearchActivity : AppCompatActivity() {
         val editText = findViewById<EditText>(R.id.search_edit_text)
         editText.setText(editTextValue)
     }
+
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         editTextValue = savedInstanceState.getString(editTextKey, "")
@@ -91,7 +109,7 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    companion object{
+    companion object {
         const val editTextKey = "editText"
     }
 }

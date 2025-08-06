@@ -70,6 +70,12 @@
         <item name="android:textFontWeight">400</item>
     </style>
 
+    <style name="Mini_regular_text_style">
+        <item name="android:textSize">@dimen/mini_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
     <style name="Text_clear_search">
         <item name="backgroundTint">@color/gray</item>
     </style>
