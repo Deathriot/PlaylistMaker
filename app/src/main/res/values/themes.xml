@@ -9,6 +9,5 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorOnSecondary">@color/black</item>
 
-
     </style>
 </resources>
