@@ -52,7 +52,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_ellipse_3"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center"
                 android:paddingHorizontal="@dimen/mini_padding"/>
 
             <TextView

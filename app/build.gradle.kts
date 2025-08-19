@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -26,6 +27,11 @@ android {
             )
         }
     }
+
+    buildFeatures{
+        viewBinding = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -48,4 +54,6 @@ dependencies {
 
     implementation(libs.glide)
     annotationProcessor(libs.compiler)
+    implementation(libs.gson)
+    implementation(libs.retrofit)
 }

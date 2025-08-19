@@ -14,7 +14,8 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.model.Track
 
 class SearchTrackAdapter(
-    private val tracks: List<Track>
+     var tracks: List<Track>
+
 ) : RecyclerView.Adapter<TrackViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track, parent, false)
@@ -28,6 +29,7 @@ class SearchTrackAdapter(
     override fun getItemCount(): Int {
         return tracks.size
     }
+
 }
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
