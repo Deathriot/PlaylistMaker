@@ -2,6 +2,7 @@
 
 <resources>
     <string name="app_name" translatable="false">Playlist Maker</string>
+
     <string name="search_btn" translatable="false">Поиск</string>
     <string name="media_library_btn" translatable="false">Медиатека</string>
     <string name="settings_btn" translatable="false">Настройки</string>
@@ -17,4 +18,8 @@
     <string name="email_name" translatable="false">kulkukumber@yandex.ru</string>
     <string name="email_title" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="email_message" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+
+    <string name="search_internet_error" translatable="false">Проблемы со связью \n \n Загрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="search_not_found" translatable="false">Ничего не нашлось</string>
+    <string name="search_refresh" translatable="false">Обновить</string>
 </resources>

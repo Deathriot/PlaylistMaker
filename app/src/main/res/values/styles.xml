@@ -64,6 +64,12 @@
         <item name="android:textFontWeight">500</item>
     </style>
 
+    <style name="Search_placeholder_text_style">
+        <item name="android:textSize">@dimen/text_size_19</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
     <style name="Regular_text_style">
         <item name="android:textSize">@dimen/minor_text_size</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
