@@ -145,6 +145,7 @@ class SearchActivity : AppCompatActivity() {
             adapter.tracks = emptyList()
             adapter.notifyDataSetChanged()
             binding.searchRecycleView.visibility = View.GONE
+            binding.searchPlaceholderLayout.visibility = View.GONE
             inputMethodManager?.hideSoftInputFromWindow(editText.windowToken, 0)
         })
 

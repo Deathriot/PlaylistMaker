@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="@dimen/minor_padding"
+    android:paddingVertical="@dimen/mini_padding"
     android:orientation="horizontal"
     android:backgroundTint="?attr/colorOnSecondary">
 
@@ -15,7 +15,7 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginTop="@dimen/minor_padding"
         android:layout_marginStart="@dimen/minor_padding"
@@ -34,25 +34,24 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/track_artist_name"
                 style="@style/Mini_regular_text_style"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray"
                 android:maxLines="1"
                 android:ellipsize="end"
-
-                tools:text="The Beatles" />
+                tools:text="The Boys" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_ellipse_3"
-                android:layout_gravity="center"
                 android:paddingHorizontal="@dimen/mini_padding"/>
 
             <TextView
