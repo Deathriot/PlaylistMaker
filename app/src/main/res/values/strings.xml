@@ -19,6 +19,8 @@
     <string name="email_title" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="email_message" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
 
+    <string name="search_clear_history" translatable="false">Очистить историю</string>
+    <string name="search_history_title" translatable="false">Вы искали</string>
     <string name="search_internet_error" translatable="false">Проблемы со связью \n \n Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="search_not_found" translatable="false">Ничего не нашлось</string>
     <string name="search_refresh" translatable="false">Обновить</string>

@@ -5,6 +5,9 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 data class Track(
+    @SerializedName("trackId")
+    val id: Long,
+
     @SerializedName("trackName")
     val title: String,
 
@@ -19,7 +22,16 @@ data class Track(
     @SerializedName("trackTimeMillis")
     val timeMillis: Long?
 ) {
-    fun setTime(){
+    fun setTime() {
         time = SimpleDateFormat("mm:ss", Locale.getDefault()).format(timeMillis)
+    }
+
+    override fun equals(other: Any?): Boolean {
+         if(other == null) return false
+        return if(other is Track){
+            this.id == other.id
+        } else {
+            false
+        }
     }
 }
