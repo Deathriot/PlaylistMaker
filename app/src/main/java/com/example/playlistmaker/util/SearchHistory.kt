@@ -82,4 +82,8 @@ class SearchHistory(val binding: ActivitySearchBinding, val prefs: SharedPrefere
             hideHistory()
         }
     }
+
+    fun isHistoryEmpty() : Boolean{
+        return trackHistory.isEmpty()
+    }
 }

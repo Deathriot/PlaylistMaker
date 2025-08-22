@@ -25,13 +25,4 @@ data class Track(
     fun setTime() {
         time = SimpleDateFormat("mm:ss", Locale.getDefault()).format(timeMillis)
     }
-
-    override fun equals(other: Any?): Boolean {
-         if(other == null) return false
-        return if(other is Track){
-            this.id == other.id
-        } else {
-            false
-        }
-    }
 }

@@ -5,14 +5,6 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 
 class App : Application() {
-
-    companion object {
-        const val APP_SHARED_PREFERENCES = "app_prefs"
-        const val SEARCH_HISTORY_KEY = "search_history"
-        const val SEARCH_NEW_TRACK_KEY = "new_track"
-        private const val THEME_KEY = "theme"
-    }
-
     private var darkTheme = false
 
     private lateinit var appSharedPrefs: SharedPreferences
@@ -41,5 +33,11 @@ class App : Application() {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
+    }
+    companion object {
+        const val APP_SHARED_PREFERENCES = "app_prefs"
+        const val SEARCH_HISTORY_KEY = "search_history"
+        const val SEARCH_NEW_TRACK_KEY = "new_track"
+        private const val THEME_KEY = "theme"
     }
 }

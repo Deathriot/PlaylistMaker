@@ -155,12 +155,16 @@ class SearchActivity : AppCompatActivity() {
             editTextValue = ""
             lastSearch = ""
             val adapter = binding.searchRecycleView.adapter as SearchTrackAdapter
-            adapter.tracks = emptyList()
-            adapter.notifyDataSetChanged()
-            binding.searchRecycleView.visibility = View.GONE
+
+            if(searchHistory.isHistoryEmpty()){
+                adapter.tracks = emptyList()
+                adapter.notifyDataSetChanged()
+                binding.searchRecycleView.visibility = View.GONE
+            }
+
             binding.searchPlaceholderLayout.visibility = View.GONE
             inputMethodManager?.hideSoftInputFromWindow(editText.windowToken, 0)
-            searchHistory.hideHistory()
+
         })
 
         val textWatcher = object : TextWatcher {
