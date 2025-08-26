@@ -134,7 +134,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setRecyclerView() {
-        val adapter = SearchTrackAdapter(prefs)
+        val adapter = SearchTrackAdapter(prefs, this)
         binding.searchRecycleView.adapter = adapter
     }
 

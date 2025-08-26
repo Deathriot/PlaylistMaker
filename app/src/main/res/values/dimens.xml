@@ -5,13 +5,15 @@
     <dimen name="mini_text_size">11sp</dimen>
     <dimen name="text_size_19">19sp</dimen>
     <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_13">13sp</dimen>
 
+    <dimen name="big_padding">24dp</dimen>
     <dimen name="normal_padding">14dp</dimen>
     <dimen name="minor_padding">8dp</dimen>
     <dimen name="mini_padding">5dp</dimen>
-    <dimen name="settings_vertical_switch_padding">24dp</dimen>"
     <dimen name="settings_vertical_button_padding">20dp</dimen>
     <dimen name="icon_padding">8dp</dimen>
+
     <dimen name="normal_button_radius">16dp</dimen>
     <dimen name="button_radius_54">54dp</dimen>
     <dimen name="normal_button_margin">4dp</dimen>

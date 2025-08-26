@@ -2,5 +2,5 @@
 <resources>
     <color name="vector_color">@color/black</color>
     <color name="light_gray">@color/white</color>
-    <color name="gray">@color/white</color>
+    <color name="gray_to_white">@color/white</color>
 </resources>
