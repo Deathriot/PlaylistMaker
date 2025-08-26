@@ -7,13 +7,13 @@ import android.widget.Button
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
     lateinit var binding: ActivitySettingsBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +27,20 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         setIntents()
+        setSwitcher()
     }
 
+    private fun setSwitcher(){
+        val switch = binding.themeSwitcher
+        val app = applicationContext as App
+        val theme = AppCompatDelegate.getDefaultNightMode()
+
+        switch.isChecked = theme == AppCompatDelegate.MODE_NIGHT_YES
+
+        switch.setOnCheckedChangeListener {switcher, isChecked ->
+            app.switchTheme(isChecked)
+        }
+    }
     private fun setIntents() {
         val btnBack = findViewById<ImageButton>(R.id.settings_back)
         btnBack.setOnClickListener {
@@ -58,15 +70,6 @@ class SettingsActivity : AppCompatActivity() {
         val btnBrowser = findViewById<Button>(R.id.btn_user_agreement)
         btnBrowser.setOnClickListener {
             startActivity(createUserAgreementIntent())
-        }
-
-        val switch = findViewById<SwitchCompat>(R.id.theme_switcher)
-        switch.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
         }
     }
 

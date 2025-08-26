@@ -1,6 +1,7 @@
 package com.example.playlistmaker.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -10,26 +11,40 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.model.Track
+import com.google.gson.GsonBuilder
 
 class SearchTrackAdapter(
-     var tracks: List<Track>
-
+    val prefs: SharedPreferences
 ) : RecyclerView.Adapter<TrackViewHolder>() {
+    private val gson = GsonBuilder().create()
+    var tracks = emptyList<Track>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track, parent, false)
+
         return TrackViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        holder.bind(tracks[position])
+        val track = tracks[position]
+        holder.bind(track)
+
+        setClickListener(holder.itemView, track)
     }
 
     override fun getItemCount(): Int {
         return tracks.size
     }
 
+    private fun setClickListener(itemView: View, track: Track) {
+        itemView.setOnClickListener {
+            val trackJson = gson.toJson(track)
+            prefs.edit().putString(App.SEARCH_NEW_TRACK_KEY, trackJson).apply()
+        }
+    }
 }
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -51,6 +66,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         title.text = track.title
         artistName.text = track.artistName
         time.text = track.time
+
     }
 
 

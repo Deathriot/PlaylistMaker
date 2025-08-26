@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -17,6 +18,7 @@ import com.example.playlistmaker.client.SearchStatus
 import com.example.playlistmaker.client.SearchTrackResult
 import com.example.playlistmaker.client.TrackResponse
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.util.SearchHistory
 import com.example.playlistmaker.util.SearchTrackAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,13 +27,17 @@ import retrofit2.Response
 class SearchActivity : AppCompatActivity() {
 
     var editTextValue = ""
-    private var lastSearh = ""
-    lateinit var binding: ActivitySearchBinding
+    private var lastSearch = ""
+    private lateinit var binding: ActivitySearchBinding
+    private lateinit var prefs : SharedPreferences
+    private lateinit var searchHistory: SearchHistory
     private val service = ITunesService().service
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
+        prefs = getSharedPreferences(App.APP_SHARED_PREFERENCES, MODE_PRIVATE)
+        searchHistory = SearchHistory(binding, prefs)
 
         setContentView(binding.root)
 
@@ -50,6 +56,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun setSearchActions() {
         val editText = binding.searchEditText
+
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
 
@@ -60,10 +67,16 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+
+        editText.setOnFocusChangeListener{ view, hasFocus ->
+            if(hasFocus && editText.text.isEmpty()){
+                searchHistory.showHistory()
+            }
+        }
     }
 
     private fun search(term: String) {
-        lastSearh = term
+        lastSearch = term
         service.searchTrack(term).enqueue(object : Callback<TrackResponse> {
             override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
                 val tracks = response.body()?.tracks
@@ -116,12 +129,12 @@ class SearchActivity : AppCompatActivity() {
         })
 
         binding.searchRefreshButton.setOnClickListener({
-            search(lastSearh)
+            search(lastSearch)
         })
     }
 
     private fun setRecyclerView() {
-        val adapter = SearchTrackAdapter(emptyList())
+        val adapter = SearchTrackAdapter(prefs)
         binding.searchRecycleView.adapter = adapter
     }
 
@@ -140,12 +153,18 @@ class SearchActivity : AppCompatActivity() {
         clearBtn.setOnClickListener({
             editText.setText("")
             editTextValue = ""
-            lastSearh = ""
+            lastSearch = ""
             val adapter = binding.searchRecycleView.adapter as SearchTrackAdapter
-            adapter.tracks = emptyList()
-            adapter.notifyDataSetChanged()
-            binding.searchRecycleView.visibility = View.GONE
+
+            if(searchHistory.isHistoryEmpty()){
+                adapter.tracks = emptyList()
+                adapter.notifyDataSetChanged()
+                binding.searchRecycleView.visibility = View.GONE
+            }
+
+            binding.searchPlaceholderLayout.visibility = View.GONE
             inputMethodManager?.hideSoftInputFromWindow(editText.windowToken, 0)
+
         })
 
         val textWatcher = object : TextWatcher {
@@ -158,6 +177,11 @@ class SearchActivity : AppCompatActivity() {
 
                 if (!s.isNullOrEmpty()) {
                     editTextValue = s.toString()
+                    searchHistory.hideHistory()
+                } else {
+                    if(editText.hasFocus()){
+                        searchHistory.showHistory()
+                    }
                 }
             }
 

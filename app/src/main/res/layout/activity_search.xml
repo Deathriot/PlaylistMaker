@@ -76,7 +76,6 @@
 
                 <ImageView
                     android:id="@+id/btn_clear_text_search"
-
                     style="Text_clear_search"
 
                     android:layout_width="wrap_content"
@@ -86,32 +85,60 @@
                     android:background="@drawable/close_button_search"
                     android:visibility="invisible" />
             </FrameLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:visibility="gone"
-                android:id="@+id/search_recycle_view"
-
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/normal_padding"
-                android:orientation="vertical"
+                android:orientation="vertical">
 
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="15"
-                tools:listitem="@layout/track">
+                <TextView
+                    android:visibility="gone"
+                    android:id="@+id/search_history_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:paddingVertical="@dimen/normal_padding"
 
-            </androidx.recyclerview.widget.RecyclerView>
+                    style="@style/Search_placeholder_text_style"
+                    android:textColor="?attr/colorOnSecondary"
+                    android:textFontWeight="500"
+                    android:text="@string/search_history_title"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:visibility="gone"
+                    android:id="@+id/search_recycle_view"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/normal_padding"
+                    android:orientation="vertical"
+
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/track">
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+                <Button
+                    android:visibility="gone"
+                    android:id="@+id/search_clear_history"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Search_functional_button"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/normal_padding"
+                    android:text="@string/search_clear_history"/>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/search_placeholder_layout"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
             android:orientation="vertical"
-            android:layout_marginTop="210dp"
-            android:visibility="gone">
+            android:layout_marginTop="210dp">
 
             <ImageView
                 android:id="@+id/search_placeholder_icon"
@@ -136,15 +163,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:backgroundTint="?attr/colorOnSecondary"
-                android:fontFamily="@font/ys_display_medium"
-
                 android:text="@string/search_refresh"
-                android:textAllCaps="false"
-                android:textColor="?attr/colorSecondary"
-                android:textFontWeight="500"
-                android:textSize="@dimen/text_size_14"
-                app:cornerRadius="@dimen/button_radius_54"/>
+                style="@style/Search_functional_button"/>
 
         </LinearLayout>
     </FrameLayout>
