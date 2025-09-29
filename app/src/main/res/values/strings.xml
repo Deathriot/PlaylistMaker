@@ -24,4 +24,10 @@
     <string name="search_internet_error" translatable="false">Проблемы со связью \n \n Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="search_not_found" translatable="false">Ничего не нашлось</string>
     <string name="search_refresh" translatable="false">Обновить</string>
+    
+    <string name="player_duration" translatable="false">Длительность</string>
+    <string name="player_collection" translatable="false">Альбом</string>
+    <string name="player_year" translatable="false">Год</string>
+    <string name="player_genre" translatable="false">Жанр</string>
+    <string name="player_country" translatable="false">Страна</string>
 </resources>

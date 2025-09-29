@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -134,7 +133,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setRecyclerView() {
-        val adapter = SearchTrackAdapter(prefs)
+        val adapter = SearchTrackAdapter(prefs, this)
         binding.searchRecycleView.adapter = adapter
     }
 
@@ -200,8 +199,13 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val editText = findViewById<EditText>(R.id.search_edit_text)
+        val editText = binding.searchEditText
         editText.setText(editTextValue)
+        editText.setSelection(editTextValue.length)
+
+        if(editTextValue.isNotEmpty()){
+            binding.searchRecycleView.visibility = View.VISIBLE
+        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

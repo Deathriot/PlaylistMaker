@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_to_white"
                 android:maxLines="1"
                 android:ellipsize="end"
                 tools:text="The Boys" />
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:textColor="@color/gray"
+                android:textColor="@color/gray_to_white"
                 tools:text="3:43" />
         </LinearLayout>
     </LinearLayout>

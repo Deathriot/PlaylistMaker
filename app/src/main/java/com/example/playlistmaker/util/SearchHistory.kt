@@ -16,7 +16,7 @@ class SearchHistory(val binding: ActivitySearchBinding, val prefs: SharedPrefere
 
     // Вводим переменную, чтобы при показе одной и той же истории треков не приходилось загружать список из префа
     private val trackHistory: ArrayList<Track>
-
+    private val MAX_HISTORY_SIZE = 10
     init {
         val typeToken = object : TypeToken<ArrayList<Track>>() {}.type
         val tracksJson = prefs.getString(App.SEARCH_HISTORY_KEY, "[]")
@@ -40,7 +40,7 @@ class SearchHistory(val binding: ActivitySearchBinding, val prefs: SharedPrefere
 
         trackHistory.remove(newTrack)
 
-        if (trackHistory.size == 10) {
+        if (trackHistory.size == MAX_HISTORY_SIZE) {
             trackHistory.removeAt(0)
         }
 
@@ -68,6 +68,7 @@ class SearchHistory(val binding: ActivitySearchBinding, val prefs: SharedPrefere
         binding.searchRecycleView.visibility = View.VISIBLE
         val adapter = binding.searchRecycleView.adapter as SearchTrackAdapter
         adapter.tracks = trackHistory.reversed()
+        adapter.notifyDataSetChanged()
     }
 
     fun hideHistory() {

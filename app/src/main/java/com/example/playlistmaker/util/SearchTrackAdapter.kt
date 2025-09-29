@@ -1,6 +1,7 @@
 package com.example.playlistmaker.util
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -12,13 +13,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.App
+import com.example.playlistmaker.AudioPlayerActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.model.Track
 import com.google.gson.GsonBuilder
 
 class SearchTrackAdapter(
-    val prefs: SharedPreferences
+    private val prefs: SharedPreferences,
+    val context: Context
 ) : RecyclerView.Adapter<TrackViewHolder>() {
+
+
     private val gson = GsonBuilder().create()
     var tracks = emptyList<Track>()
 
@@ -43,6 +48,12 @@ class SearchTrackAdapter(
         itemView.setOnClickListener {
             val trackJson = gson.toJson(track)
             prefs.edit().putString(App.SEARCH_NEW_TRACK_KEY, trackJson).apply()
+
+            val intent = Intent(context, AudioPlayerActivity::class.java).apply {
+                putExtra(App.SEARCH_NEW_TRACK_KEY, track)
+            }
+
+            context.startActivity(intent)
         }
     }
 }
@@ -66,15 +77,5 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         title.text = track.title
         artistName.text = track.artistName
         time.text = track.time
-
-    }
-
-
-    private fun dpToPx(dp: Float, context: Context): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
-            context.resources.displayMetrics
-        ).toInt()
     }
 }
