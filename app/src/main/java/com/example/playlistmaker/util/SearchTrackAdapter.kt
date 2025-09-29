@@ -3,7 +3,8 @@ package com.example.playlistmaker.util
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.util.TypedValue
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,9 +21,12 @@ import com.google.gson.GsonBuilder
 
 class SearchTrackAdapter(
     private val prefs: SharedPreferences,
-    val context: Context
+    private val context: Context
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
+
+    private val handler = Handler(Looper.getMainLooper())
+    private var isClickAllowed = true
 
     private val gson = GsonBuilder().create()
     var tracks = emptyList<Track>()
@@ -46,6 +50,10 @@ class SearchTrackAdapter(
 
     private fun setClickListener(itemView: View, track: Track) {
         itemView.setOnClickListener {
+            if(!clickDebounce()){
+                return@setOnClickListener
+            }
+
             val trackJson = gson.toJson(track)
             prefs.edit().putString(App.SEARCH_NEW_TRACK_KEY, trackJson).apply()
 
@@ -55,6 +63,19 @@ class SearchTrackAdapter(
 
             context.startActivity(intent)
         }
+    }
+
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
+    }
+
+    companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 800L
     }
 }
 

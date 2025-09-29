@@ -35,7 +35,10 @@ data class Track(
     val primaryGenreName: String,
 
     @SerializedName("country")
-    val country: String
+    val country: String,
+
+    @SerializedName("previewUrl")
+    val musicUrl : String
 ) : Parcelable {
 
     fun setTime() {
