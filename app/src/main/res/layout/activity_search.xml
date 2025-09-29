@@ -85,32 +85,33 @@
                     android:background="@drawable/close_button_search"
                     android:visibility="invisible" />
             </FrameLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <TextView
-                    android:visibility="gone"
                     android:id="@+id/search_history_title"
+                    style="@style/Search_placeholder_text_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:paddingVertical="@dimen/normal_padding"
 
-                    style="@style/Search_placeholder_text_style"
+                    android:text="@string/search_history_title"
                     android:textColor="?attr/colorOnSecondary"
                     android:textFontWeight="500"
-                    android:text="@string/search_history_title"/>
+                    android:visibility="gone" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:visibility="gone"
                     android:id="@+id/search_recycle_view"
-
                     android:layout_width="match_parent"
+
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/normal_padding"
                     android:orientation="vertical"
+                    android:visibility="gone"
 
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="3"
@@ -119,33 +120,42 @@
                 </androidx.recyclerview.widget.RecyclerView>
 
                 <Button
-                    android:visibility="gone"
                     android:id="@+id/search_clear_history"
+                    style="@style/Search_functional_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Search_functional_button"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/normal_padding"
-                    android:text="@string/search_clear_history"/>
+                    android:text="@string/search_clear_history"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
 
+        <ProgressBar
+            android:id="@+id/search_progressBar"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="190dp"
+            android:indeterminateTint="@color/blue"
+            android:visibility="gone" />
+
         <LinearLayout
             android:id="@+id/search_placeholder_layout"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="210dp"
             android:gravity="center"
             android:orientation="vertical"
-            android:layout_marginTop="210dp">
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/search_placeholder_icon"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
-                tools:src="@drawable/no_tracks_found_placeholder"/>
+                tools:src="@drawable/no_tracks_found_placeholder" />
 
             <TextView
                 android:id="@+id/search_placeholder_text"
@@ -156,15 +166,15 @@
                 android:layout_margin="@dimen/normal_padding"
                 android:textAlignment="center"
                 android:textColor="?attr/colorOnSecondary"
-                tools:text="@string/search_not_found"/>
+                tools:text="@string/search_not_found" />
 
             <Button
                 android:id="@+id/search_refresh_button"
+                style="@style/Search_functional_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/search_refresh"
-                style="@style/Search_functional_button"/>
+                android:text="@string/search_refresh" />
 
         </LinearLayout>
     </FrameLayout>
