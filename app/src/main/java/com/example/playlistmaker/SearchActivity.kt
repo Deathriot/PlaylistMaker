@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -28,9 +30,11 @@ class SearchActivity : AppCompatActivity() {
     var editTextValue = ""
     private var lastSearch = ""
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var prefs : SharedPreferences
+    private lateinit var prefs: SharedPreferences
     private lateinit var searchHistory: SearchHistory
     private val service = ITunesService().service
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { search(editTextValue) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,20 +66,25 @@ class SearchActivity : AppCompatActivity() {
                 val term = editText.text.toString()
                 Log.i("TestTerm", term)
                 search(term)
-                true
             }
             false
         }
 
-        editText.setOnFocusChangeListener{ view, hasFocus ->
-            if(hasFocus && editText.text.isEmpty()){
+        editText.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus && editText.text.isEmpty()) {
                 searchHistory.showHistory()
             }
         }
     }
 
     private fun search(term: String) {
+        if(term.isEmpty()){
+            return
+        }
+
         lastSearch = term
+        showProgressBar()
+
         service.searchTrack(term).enqueue(object : Callback<TrackResponse> {
             override fun onResponse(call: Call<TrackResponse>, response: Response<TrackResponse>) {
                 val tracks = response.body()?.tracks
@@ -93,7 +102,16 @@ class SearchActivity : AppCompatActivity() {
         })
     }
 
+    private fun showProgressBar() {
+        binding.searchProgressBar.visibility = View.VISIBLE
+        binding.searchPlaceholderLayout.visibility = View.GONE
+        binding.searchRecycleView.visibility = View.GONE
+        binding.searchRefreshButton.visibility = View.GONE
+    }
+
     private fun changeUI(result: SearchTrackResult) {
+        binding.searchProgressBar.visibility = View.GONE
+
         when (result.status) {
             SearchStatus.OK -> {
                 result.tracks!!.forEach { track -> track.setTime() }
@@ -155,7 +173,7 @@ class SearchActivity : AppCompatActivity() {
             lastSearch = ""
             val adapter = binding.searchRecycleView.adapter as SearchTrackAdapter
 
-            if(searchHistory.isHistoryEmpty()){
+            if (searchHistory.isHistoryEmpty()) {
                 adapter.tracks = emptyList()
                 adapter.notifyDataSetChanged()
                 binding.searchRecycleView.visibility = View.GONE
@@ -176,9 +194,10 @@ class SearchActivity : AppCompatActivity() {
 
                 if (!s.isNullOrEmpty()) {
                     editTextValue = s.toString()
+                    searchDebounce()
                     searchHistory.hideHistory()
                 } else {
-                    if(editText.hasFocus()){
+                    if (editText.hasFocus()) {
                         searchHistory.showHistory()
                     }
                 }
@@ -192,6 +211,11 @@ class SearchActivity : AppCompatActivity() {
         editText.addTextChangedListener(textWatcher)
     }
 
+    private fun searchDebounce() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(editTextKey, editTextValue)
@@ -203,7 +227,7 @@ class SearchActivity : AppCompatActivity() {
         editText.setText(editTextValue)
         editText.setSelection(editTextValue.length)
 
-        if(editTextValue.isNotEmpty()){
+        if (editTextValue.isNotEmpty()) {
             binding.searchRecycleView.visibility = View.VISIBLE
         }
     }
@@ -223,5 +247,6 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val editTextKey = "editText"
+        const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }

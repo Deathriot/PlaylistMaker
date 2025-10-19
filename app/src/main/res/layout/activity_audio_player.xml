@@ -83,23 +83,27 @@
 
         tools:text="The Beatles" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/player_play_btn"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/big_padding"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/transparent"
+        android:enabled="false"
         android:src="@drawable/ic_audio_player_play_btn_83"
 
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/player_track_artist" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/player_add_playlist_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:src="@drawable/ic_audio_player_add_playlist_btn_51"
+        android:background="@drawable/ic_audio_player_add_playlist_btn_51"
 
         app:layout_constraintBottom_toBottomOf="@id/player_play_btn"
         app:layout_constraintStart_toEndOf="@id/left_border"
@@ -158,7 +162,7 @@
         android:id="@+id/player_track_duration_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/big_padding"
+        android:layout_marginTop="@dimen/normal_padding"
 
         style="@style/Audio_player_track_info_text_style"
         android:textColor="@color/gray"

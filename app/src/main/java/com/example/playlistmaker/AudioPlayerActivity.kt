@@ -2,7 +2,6 @@ package com.example.playlistmaker
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
@@ -13,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
 import com.example.playlistmaker.model.Track
+import com.example.playlistmaker.util.MyMediaPlayer
 import com.example.playlistmaker.util.dpToPx
 import java.time.ZonedDateTime
 
@@ -20,6 +20,8 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAudioPlayerBinding
     private lateinit var currentTrack : Track
     private val CORNER_RADIUS = 8f
+
+    private lateinit var mediaPlayer : MyMediaPlayer
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +41,26 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         setBackBtn()
         setUI()
+
+        mediaPlayer = MyMediaPlayer(binding, currentTrack)
+        setPlayBtn()
     }
 
+    private fun setPlayBtn(){
+        binding.playerPlayBtn.setOnClickListener{
+            mediaPlayer.onClickPlayBtn()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mediaPlayer.pause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.release()
+    }
     private fun setUI(){
         setImage()
         binding.playerTrackTitle.text = currentTrack.title
