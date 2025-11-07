@@ -30,4 +30,5 @@
     <string name="player_year" translatable="false">Год</string>
     <string name="player_genre" translatable="false">Жанр</string>
     <string name="player_country" translatable="false">Страна</string>
+    <string name="default_timer_value" translatable="false">0:00</string>
 </resources>
