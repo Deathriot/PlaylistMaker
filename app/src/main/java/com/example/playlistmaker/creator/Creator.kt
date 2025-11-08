@@ -12,14 +12,17 @@ import com.example.playlistmaker.data.repository.TrackRepositoryImpl
 import com.example.playlistmaker.domain.repository.DarkThemeRepository
 import com.example.playlistmaker.domain.repository.HistoryTrackRepository
 import com.example.playlistmaker.domain.repository.TrackRepository
-import com.example.playlistmaker.domain.use_case.GetDarkThemeUseCase
-import com.example.playlistmaker.domain.use_case.GetTracksUseCase
+import com.example.playlistmaker.domain.use_case.GetDarkThemeUseCaseImpl
+import com.example.playlistmaker.domain.use_case.GetTracksUseCaseImpl
 import com.example.playlistmaker.domain.interactor.HistoryTrackInteractor
 import com.example.playlistmaker.domain.interactor.HistoryTrackInteractorImpl
 import com.example.playlistmaker.domain.interactor.MediaPlayerInteractor
 import com.example.playlistmaker.domain.interactor.MediaPlayerInteractorImpl
-import com.example.playlistmaker.domain.media_player.MediaPlayer
+import com.example.playlistmaker.domain.media_player.AudioPlayer
+import com.example.playlistmaker.domain.use_case.GetDarkThemeUseCase
+import com.example.playlistmaker.domain.use_case.GetTracksUseCase
 import com.example.playlistmaker.domain.use_case.SetDarkThemeUseCase
+import com.example.playlistmaker.domain.use_case.SetDarkThemeUseCaseImpl
 import com.example.playlistmaker.ui.app.App
 
 object Creator {
@@ -30,15 +33,15 @@ object Creator {
     }
 
     fun provideGetDarkThemeUseCase(): GetDarkThemeUseCase {
-        return GetDarkThemeUseCase(provideDarkThemeRepository())
+        return GetDarkThemeUseCaseImpl(provideDarkThemeRepository())
     }
 
     fun provideSetDarkThemeUseCase(): SetDarkThemeUseCase {
-        return SetDarkThemeUseCase(provideDarkThemeRepository())
+        return SetDarkThemeUseCaseImpl(provideDarkThemeRepository())
     }
 
     fun provideGetTracksUseCase(): GetTracksUseCase {
-        return GetTracksUseCase(provideTrackRepository())
+        return GetTracksUseCaseImpl(provideTrackRepository())
     }
 
     fun provideHistoryTrackInteractor(): HistoryTrackInteractor {
@@ -49,7 +52,7 @@ object Creator {
         return MediaPlayerInteractorImpl(provideMediaPlayer())
     }
 
-    private fun provideMediaPlayer(): MediaPlayer {
+    private fun provideMediaPlayer(): AudioPlayer {
         return DefaultMediaPlayer()
     }
 

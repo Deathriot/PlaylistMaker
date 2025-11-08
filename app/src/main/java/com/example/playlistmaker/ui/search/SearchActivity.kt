@@ -17,7 +17,6 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.domain.consumer.Consumer
-import com.example.playlistmaker.domain.consumer.ConsumerData
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.presentation.mapper.TrackDetailsInfoMapper
 import com.example.playlistmaker.presentation.mapper.TrackInfoMapper
@@ -84,32 +83,27 @@ class SearchActivity : AppCompatActivity() {
         getTracksUseCase.execute(
             title = term,
             consumer = object : Consumer<List<Track>?> {
-                override fun consume(data: ConsumerData<List<Track>?>) {
+                override fun consume(data: Result<List<Track>?>) {
                     changeUI(data)
                 }
             })
     }
 
-    private fun changeUI(data: ConsumerData<List<Track>?>) {
+    private fun changeUI(data: Result<List<Track>?>) {
         hideProgressBar()
-        Log.i("LOADING", "LOADING")
-        when (data) {
-            is ConsumerData.Data -> {
-                if (data.value.isNullOrEmpty()) {
-                    showTracksNotFound()
-                    return
-                }
-
-                val tracksInfo = data.value.map { TrackInfoMapper.map(it) }
-                val adapter = binding.searchRecycleView.adapter as SearchTrackAdapter
-                adapter.setTracks(tracksInfo)
-                showTrackList()
+        if(data.isSuccess){
+            if (data.getOrNull().isNullOrEmpty()) {
+                showTracksNotFound()
+                return
             }
 
-            is ConsumerData.Error -> {
-                showInternetError()
-                Log.i("search", data.message)
-            }
+            val tracksInfo = data.getOrNull()!!.map { TrackInfoMapper.map(it) }
+            val adapter = binding.searchRecycleView.adapter as SearchTrackAdapter
+            adapter.setTracks(tracksInfo)
+            showTrackList()
+        } else {
+            showInternetError()
+            Log.e("search", "Error!", data.exceptionOrNull())
         }
     }
 

@@ -49,8 +49,8 @@ class HistoryTrackRepositoryImpl(
     }
 
     companion object {
-        const val SEARCH_HISTORY_KEY = "search_history"
+        private const val SEARCH_HISTORY_KEY = "search_history"
 
-        const val MAX_HISTORY_SIZE = 10
+        private const val MAX_HISTORY_SIZE = 10
     }
 }

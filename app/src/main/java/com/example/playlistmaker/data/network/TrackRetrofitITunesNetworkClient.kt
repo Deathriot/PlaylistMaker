@@ -4,7 +4,6 @@ import com.example.playlistmaker.data.model.TrackITunesResponse
 import com.example.playlistmaker.data.model.TrackNetworkResponse
 import com.example.playlistmaker.data.repository.TrackNetworkClient
 import com.example.playlistmaker.domain.consumer.Consumer
-import com.example.playlistmaker.domain.consumer.ConsumerData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,11 +18,11 @@ class TrackRetrofitITunesNetworkClient : TrackNetworkClient {
             ) {
                 val trackResponse = response.body()
                 trackResponse?.resultCode = response.code()
-                consumer.consume(ConsumerData.Data(trackResponse))
+                consumer.consume(Result.success(trackResponse))
             }
 
             override fun onFailure(call: Call<TrackITunesResponse>, t: Throwable) {
-                consumer.consume(ConsumerData.Error("internet error"))
+                consumer.consume(Result.failure(t))
             }
         })
 

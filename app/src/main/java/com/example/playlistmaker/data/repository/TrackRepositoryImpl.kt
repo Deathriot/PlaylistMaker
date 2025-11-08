@@ -3,7 +3,6 @@ package com.example.playlistmaker.data.repository
 import com.example.playlistmaker.data.mapper.TrackMapper
 import com.example.playlistmaker.data.model.TrackNetworkResponse
 import com.example.playlistmaker.domain.consumer.Consumer
-import com.example.playlistmaker.domain.consumer.ConsumerData
 import com.example.playlistmaker.domain.model.Track
 import com.example.playlistmaker.domain.repository.TrackRepository
 
@@ -17,14 +16,14 @@ class TrackRepositoryImpl(
         trackNetworkClient.getTracks(
             title = title,
             consumer = object : Consumer<TrackNetworkResponse?> {
-                override fun consume(data: ConsumerData<TrackNetworkResponse?>) {
-                    if(data is ConsumerData.Error){
-                        consumer.consume(ConsumerData.Error(data.message))
-                    } else if (data is ConsumerData.Data){
-                        val tracksDto = data.value?.tracks
+                override fun consume(data: Result<TrackNetworkResponse?>) {
+                    if(data.isFailure){
+                        consumer.consume(Result.failure(data.exceptionOrNull()!!))
+                    } else if (data.isSuccess){
+                        val tracksDto = data.getOrNull()?.tracks
                         val tracks = tracksDto?.map { TrackMapper.map(it) }
                         trackList = tracks
-                        consumer.consume(ConsumerData.Data(tracks))
+                        consumer.consume(Result.success(tracks))
                     }
                 }
             })

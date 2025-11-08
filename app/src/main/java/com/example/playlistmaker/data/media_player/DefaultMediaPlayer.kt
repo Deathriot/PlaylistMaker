@@ -1,9 +1,10 @@
 package com.example.playlistmaker.data.media_player
 
-import com.example.playlistmaker.domain.media_player.MediaPlayer
+import android.media.MediaPlayer
+import com.example.playlistmaker.domain.media_player.AudioPlayer
 
-class DefaultMediaPlayer : MediaPlayer{
-    private val mediaPlayer = android.media.MediaPlayer()
+class DefaultMediaPlayer : AudioPlayer {
+    private val mediaPlayer = MediaPlayer()
 
     override fun getCurrentTrackTime(): Int {
         return mediaPlayer.currentPosition
@@ -13,7 +14,7 @@ class DefaultMediaPlayer : MediaPlayer{
         mediaPlayer.setDataSource(path)
         mediaPlayer.prepareAsync()
 
-        mediaPlayer.setOnPreparedListener{
+        mediaPlayer.setOnPreparedListener {
             onPrepare.invoke()
         }
 
@@ -31,6 +32,6 @@ class DefaultMediaPlayer : MediaPlayer{
     }
 
     override fun release() {
-       mediaPlayer.release()
+        mediaPlayer.release()
     }
 }
