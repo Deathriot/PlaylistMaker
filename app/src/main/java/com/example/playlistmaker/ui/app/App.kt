@@ -21,5 +21,7 @@ class App : Application() {
 
     companion object {
         const val APP_SHARED_PREFERENCES = "app_prefs"
+        const val SEARCH_HISTORY_KEY = "search_history"
+        const val THEME_KEY = "theme"
     }
 }

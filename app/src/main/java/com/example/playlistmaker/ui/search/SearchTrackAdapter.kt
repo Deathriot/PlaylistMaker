@@ -5,21 +5,23 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.R
-import com.example.playlistmaker.presentation.model.TrackInfo
+import com.example.playlistmaker.databinding.TrackBinding
+import com.example.playlistmaker.ui.search.model.TrackInfo
 
 class SearchTrackAdapter(
     private val onClick: (trackId: Long) -> Unit
 ) : RecyclerView.Adapter<TrackViewHolder>() {
 
-    private var tracks = emptyList<TrackInfo>()
+    private var tracks: List<TrackInfo> = emptyList()
 
     private val handler = Handler(Looper.getMainLooper())
     private var isClickAllowed = true
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.track, parent, false)
-        return TrackViewHolder(view) { position ->
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = TrackBinding.inflate(inflater, parent, false)
+
+        return TrackViewHolder(binding) { position ->
             if (position != RecyclerView.NO_POSITION && clickDebounce()) {
                 tracks.getOrNull(position)?.let { trackInfo ->
                     onClick(trackInfo.id)
@@ -37,12 +39,16 @@ class SearchTrackAdapter(
         return tracks.size
     }
 
-    fun setTracks(newTracks : List<TrackInfo>){
+    fun setTracks(newTracks: List<TrackInfo>) {
         tracks = newTracks
         notifyDataSetChanged()
     }
 
-    private fun clickDebounce() : Boolean {
+    fun isEmpty() : Boolean{
+        return tracks.isEmpty()
+    }
+
+    private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
