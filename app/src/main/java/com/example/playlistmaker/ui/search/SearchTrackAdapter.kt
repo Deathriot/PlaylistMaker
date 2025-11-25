@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.databinding.TrackBinding
-import com.example.playlistmaker.presentation.model.TrackInfo
+import com.example.playlistmaker.ui.search.model.TrackInfo
 
 class SearchTrackAdapter(
     private val onClick: (trackId: Long) -> Unit

@@ -1,35 +1,35 @@
 package com.example.playlistmaker.creator
 
 import android.app.Application
-import com.example.playlistmaker.data.util.media_player.DefaultMediaPlayer
-import com.example.playlistmaker.data.network.track.TrackRetrofitITunesNetworkClient
-import com.example.playlistmaker.data.repository.settings.DarkThemeRepositoryImpl
-import com.example.playlistmaker.data.repository.search.HistoryTrackRepositoryImpl
-import com.example.playlistmaker.data.repository.search.TrackNetworkClient
-import com.example.playlistmaker.data.repository.search.TrackRepositoryImpl
+import com.example.playlistmaker.data.player.model.DefaultMediaPlayer
+import com.example.playlistmaker.data.search.impl.TrackRetrofitITunesNetworkClient
+import com.example.playlistmaker.data.settings.impl.DarkThemeRepositoryImpl
+import com.example.playlistmaker.data.search.impl.HistoryTrackRepositoryImpl
+import com.example.playlistmaker.data.search.TrackNetworkClient
+import com.example.playlistmaker.data.search.impl.TrackRepositoryImpl
 import com.example.playlistmaker.data.sharing.ExternalNavigatorImpl
 import com.example.playlistmaker.data.storage.PrefsStorageClient
-import com.example.playlistmaker.data.util.dark_theme.DarkThemeInteractorImpl
-import com.example.playlistmaker.domain.repository.settings.DarkThemeRepository
-import com.example.playlistmaker.domain.repository.search.HistoryTrackRepository
-import com.example.playlistmaker.domain.repository.search.TrackRepository
-import com.example.playlistmaker.domain.use_case.settings.GetDarkThemeUseCaseImpl
-import com.example.playlistmaker.domain.use_case.search.GetTracksUseCaseImpl
-import com.example.playlistmaker.domain.use_case.search.HistoryTrackInteractor
-import com.example.playlistmaker.domain.use_case.search.HistoryTrackInteractorImpl
-import com.example.playlistmaker.domain.use_case.audio_player.MediaPlayerInteractor
-import com.example.playlistmaker.domain.use_case.audio_player.MediaPlayerInteractorImpl
-import com.example.playlistmaker.domain.util.media_player.AudioPlayer
-import com.example.playlistmaker.domain.model.Track
+import com.example.playlistmaker.data.settings.impl.DarkThemeInteractorImpl
+import com.example.playlistmaker.domain.settings.repository.DarkThemeRepository
+import com.example.playlistmaker.domain.search.repository.HistoryTrackRepository
+import com.example.playlistmaker.domain.search.repository.TrackRepository
+import com.example.playlistmaker.domain.settings.impl.GetDarkThemeUseCaseImpl
+import com.example.playlistmaker.domain.search.impl.GetTracksUseCaseImpl
+import com.example.playlistmaker.domain.search.HistoryTrackInteractor
+import com.example.playlistmaker.domain.search.impl.HistoryTrackInteractorImpl
+import com.example.playlistmaker.domain.player.MediaPlayerInteractor
+import com.example.playlistmaker.domain.player.impl.MediaPlayerInteractorImpl
+import com.example.playlistmaker.domain.player.model.AudioPlayer
+import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.domain.sharing.ExternalNavigator
 import com.example.playlistmaker.domain.storage.StorageClient
-import com.example.playlistmaker.domain.use_case.settings.GetDarkThemeUseCase
-import com.example.playlistmaker.domain.use_case.search.GetTracksUseCase
-import com.example.playlistmaker.domain.use_case.settings.SetDarkThemeUseCase
-import com.example.playlistmaker.domain.use_case.settings.SetDarkThemeUseCaseImpl
-import com.example.playlistmaker.domain.use_case.settings.SettingsInteractor
-import com.example.playlistmaker.domain.use_case.settings.SettingsInteractorImpl
-import com.example.playlistmaker.domain.util.dark_theme.DarkThemeInteractor
+import com.example.playlistmaker.domain.settings.GetDarkThemeUseCase
+import com.example.playlistmaker.domain.search.GetTracksUseCase
+import com.example.playlistmaker.domain.settings.SetDarkThemeUseCase
+import com.example.playlistmaker.domain.settings.impl.SetDarkThemeUseCaseImpl
+import com.example.playlistmaker.domain.settings.SettingsInteractor
+import com.example.playlistmaker.domain.settings.impl.SettingsInteractorImpl
+import com.example.playlistmaker.domain.settings.DarkThemeInteractor
 import com.example.playlistmaker.ui.app.App
 import com.google.gson.reflect.TypeToken
 
@@ -68,7 +68,7 @@ object Creator {
         return SetDarkThemeUseCaseImpl(provideDarkThemeRepository(), provideDarkThemeInteractor())
     }
 
-    private fun provideDarkThemeInteractor() :DarkThemeInteractor{
+    private fun provideDarkThemeInteractor() : DarkThemeInteractor {
         return DarkThemeInteractorImpl()
     }
     private fun provideExternalNavigator(): ExternalNavigator {
