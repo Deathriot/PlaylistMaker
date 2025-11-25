@@ -1,17 +1,13 @@
 package com.example.playlistmaker.ui.search.viewmodel
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.domain.consumer.Consumer
+import com.example.playlistmaker.domain.search.GetTracksUseCase
+import com.example.playlistmaker.domain.search.HistoryTrackInteractor
 import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.ui.search.mapper.TrackDetailsInfoMapper
 import com.example.playlistmaker.ui.search.mapper.TrackInfoMapper
@@ -22,13 +18,12 @@ import com.example.playlistmaker.ui.search.viewmodel.model.EditTextState
 import com.example.playlistmaker.ui.search.viewmodel.model.SearchConstants
 
 class SearchViewModel(
-    private val constants: SearchConstants
+    private val constants: SearchConstants,
+    private val getTracksUseCase : GetTracksUseCase,
+    private val historyInteractor : HistoryTrackInteractor
 ) : ViewModel() {
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { search() }
-
-    private val getTracksUseCase = Creator.provideGetTracksUseCase()
-    private val historyInteractor = Creator.provideHistoryTrackInteractor()
 
     private val searchState = MutableLiveData<State>()
     fun observeSearchState(): LiveData<State> = searchState
@@ -43,7 +38,6 @@ class SearchViewModel(
     fun observeHistory(): LiveData<List<TrackInfo>> = historyTracks
 
     private var isHistoryShown = true
-
 
     fun search() {
         val text = inputValue.value?.text
@@ -126,13 +120,5 @@ class SearchViewModel(
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
-
-        fun getFactory(): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = (this[APPLICATION_KEY] as Application)
-                val constants = SearchConstants(app)
-                return@initializer SearchViewModel(constants)
-            }
-        }
     }
 }

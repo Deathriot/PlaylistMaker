@@ -4,13 +4,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 import com.example.playlistmaker.ui.settings.viewmodel.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
-    private lateinit var viewModel : SettingsViewModel
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,19 +23,17 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
-        val factory = SettingsViewModel.getFactory()
-        viewModel = ViewModelProvider(this, factory)[SettingsViewModel::class.java]
         initClickListeners()
         setSwitcher()
     }
 
     private fun setSwitcher() {
-        viewModel.observeDarkTheme().observe(this){
+        settingsViewModel.observeDarkTheme().observe(this) {
             binding.themeSwitcher.isChecked = it
         }
 
         binding.themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.changeDarkTheme(isChecked)
+            settingsViewModel.changeDarkTheme(isChecked)
         }
     }
 
@@ -45,15 +43,15 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.btnShare.setOnClickListener {
-            viewModel.share()
+            settingsViewModel.share()
         }
 
         binding.btnSupport.setOnClickListener {
-            viewModel.contactSupport()
+            settingsViewModel.contactSupport()
         }
 
         binding.btnUserAgreement.setOnClickListener {
-            viewModel.openUserAgreement()
+            settingsViewModel.openUserAgreement()
         }
     }
 }
