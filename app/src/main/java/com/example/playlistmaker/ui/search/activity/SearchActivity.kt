@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.ui.search.model.State
@@ -20,6 +19,7 @@ import com.example.playlistmaker.ui.search.model.TrackInfo
 import com.example.playlistmaker.ui.search.viewmodel.SearchViewModel
 import com.example.playlistmaker.ui.audio_player.activity.AudioPlayerActivity
 import com.example.playlistmaker.ui.search.SearchTrackAdapter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
@@ -28,14 +28,10 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var textWatcher: TextWatcher
     private lateinit var adapter: SearchTrackAdapter
 
-    private lateinit var viewModel: SearchViewModel
+    private val searchViewModel: SearchViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(
-            this, SearchViewModel.getFactory()
-        )[SearchViewModel::class.java]
 
         binding = ActivitySearchBinding.inflate(layoutInflater)
         editText = binding.searchEditText
@@ -56,7 +52,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setObservers() {
-        viewModel.observeEditTextValue().observe(this) {
+        searchViewModel.observeEditTextValue().observe(this) {
             val text = it.text
             val isFocused = it.isFocused
 
@@ -78,15 +74,15 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.observeSearchState().observe(this) {
+        searchViewModel.observeSearchState().observe(this) {
             render(it)
         }
 
-        viewModel.observeOnTrackClick().observe(this) {
+        searchViewModel.observeOnTrackClick().observe(this) {
             AudioPlayerActivity.show(it, this)
         }
 
-        viewModel.observeHistory().observe(this) {
+        searchViewModel.observeHistory().observe(this) {
             adapter.setTracks(it)
             if (it.isEmpty()) {
                 hideHistory()
@@ -150,7 +146,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun clearSearchHistory() {
-        viewModel.clearHistory()
+        searchViewModel.clearHistory()
         adapter.setTracks(emptyList())
     }
 
@@ -175,7 +171,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun onTrackClick(trackId: Long) {
-        viewModel.onTrackClicked(trackId)
+        searchViewModel.onTrackClicked(trackId)
     }
 
     private fun setEditTextActions() {
@@ -183,7 +179,7 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                viewModel.onTextChanged(s)
+                searchViewModel.onTextChanged(s)
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -193,13 +189,13 @@ class SearchActivity : AppCompatActivity() {
 
         editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.search()
+                searchViewModel.search()
             }
             false
         }
 
         editText.setOnFocusChangeListener { _, hasFocus ->
-            viewModel.setFocus(hasFocus)
+            searchViewModel.setFocus(hasFocus)
         }
     }
 
@@ -209,7 +205,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.searchRefreshButton.setOnClickListener {
-            viewModel.search()
+            searchViewModel.search()
         }
 
         binding.searchClearHistory.setOnClickListener {
@@ -218,7 +214,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.btnClearTextSearch.setOnClickListener {
-            viewModel.onTextChanged("")
+            searchViewModel.onTextChanged("")
             binding.searchPlaceholderLayout.isVisible = false
             (getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
                 ?.hideSoftInputFromWindow(editText.windowToken, 0)
