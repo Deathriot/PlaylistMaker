@@ -14,7 +14,6 @@ gson = "2.9.0"
 retrofit = "2.9.0"
 parcel = "2.2.20-RC"
 lifecycle = "2.5.1"
-koin = "3.3.0"
 
 
 [libraries]
@@ -34,7 +33,6 @@ androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle
 androidx-lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity" }
 
-koin = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
