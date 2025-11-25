@@ -2,41 +2,44 @@ package com.example.playlistmaker.ui.search
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySearchBinding
-import com.example.playlistmaker.domain.consumer.Consumer
-import com.example.playlistmaker.domain.model.Track
-import com.example.playlistmaker.presentation.mapper.TrackDetailsInfoMapper
-import com.example.playlistmaker.presentation.mapper.TrackInfoMapper
+import com.example.playlistmaker.presentation.model.State
+import com.example.playlistmaker.presentation.model.TrackInfo
+import com.example.playlistmaker.presentation.viewmodel.search.SearchViewModel
 import com.example.playlistmaker.ui.audio_player.AudioPlayerActivity
 
 class SearchActivity : AppCompatActivity() {
-
-    var editTextValue = ""
-    private var lastSearch = ""
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var searchHistory: SearchHistory
-    private val handler = Handler(Looper.getMainLooper())
-    private val searchRunnable = Runnable { search(editTextValue) }
 
-    private val getTracksUseCase = Creator.provideGetTracksUseCase()
+    private lateinit var editText: EditText
+    private lateinit var textWatcher: TextWatcher
+    private lateinit var adapter: SearchTrackAdapter
+
+    private lateinit var viewModel: SearchViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProvider(
+            this, SearchViewModel.getFactory()
+        )[SearchViewModel::class.java]
+
         binding = ActivitySearchBinding.inflate(layoutInflater)
-        searchHistory = SearchHistory(binding)
+        editText = binding.searchEditText
+        adapter = SearchTrackAdapter(this::onTrackClick)
+        binding.searchRecycleView.adapter = adapter
 
         setContentView(binding.root)
 
@@ -46,64 +49,69 @@ class SearchActivity : AppCompatActivity() {
             insets
         }
 
+        setObservers()
         initClickListeners()
-        setEditTextActions(savedInstanceState)
-        setRecyclerView()
-        setSearchActions()
+        setEditTextActions()
     }
 
-    private fun setSearchActions() {
-        val editText = binding.searchEditText
+    private fun setObservers() {
+        viewModel.observeEditTextValue().observe(this) {
+            val text = it.text
+            val isFocused = it.isFocused
 
-        editText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
 
-                val term = editText.text.toString()
-                search(term)
+            if (editText.text.toString() != text) {
+                editText.setText(text)
             }
-            false
-        }
 
-        editText.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus && editText.text.isEmpty()) {
-                searchHistory.showHistory()
-            }
-        }
-    }
-
-    private fun search(term: String) {
-        if (term.isEmpty()) {
-            return
-        }
-
-        lastSearch = term
-        showProgressBar()
-        handler.removeCallbacks(searchRunnable)
-
-        getTracksUseCase.execute(
-            title = term,
-            consumer = object : Consumer<List<Track>?> {
-                override fun consume(data: Result<List<Track>?>) {
-                    changeUI(data)
+            if (text.isNullOrEmpty()) {
+                binding.btnClearTextSearch.isVisible = false
+                if (isFocused) {
+                    showHistory()
+                } else {
+                    hideHistory()
                 }
-            })
+            } else {
+                hideHistory()
+                binding.btnClearTextSearch.isVisible = true
+            }
+        }
+
+        viewModel.observeSearchState().observe(this) {
+            render(it)
+        }
+
+        viewModel.observeOnTrackClick().observe(this) {
+            AudioPlayerActivity.show(it, this)
+        }
+
+        viewModel.observeHistory().observe(this) {
+            adapter.setTracks(it)
+            if (it.isEmpty()) {
+                hideHistory()
+            }
+        }
     }
 
-    private fun changeUI(data: Result<List<Track>?>) {
+    private fun render(state: State) {
         hideProgressBar()
-        if(data.isSuccess){
-            if (data.getOrNull().isNullOrEmpty()) {
-                showTracksNotFound()
-                return
+
+        when (state) {
+            is State.Content<*> -> {
+                showTrackList(state.data as List<TrackInfo>)
             }
 
-            val tracksInfo = data.getOrNull()!!.map { TrackInfoMapper.map(it) }
-            val adapter = binding.searchRecycleView.adapter as SearchTrackAdapter
-            adapter.setTracks(tracksInfo)
-            showTrackList()
-        } else {
-            showInternetError()
-            Log.e("search", "Error!", data.exceptionOrNull())
+            is State.Empty -> {
+                showTracksNotFound(state.message)
+            }
+
+            is State.Error -> {
+                showInternetError(state.message)
+            }
+
+            State.Loading -> {
+                showProgressBar()
+            }
         }
     }
 
@@ -118,141 +126,112 @@ class SearchActivity : AppCompatActivity() {
         binding.searchProgressBar.visibility = View.GONE
     }
 
-    private fun showTrackList() {
+    private fun showTrackList(tracks: List<TrackInfo>) {
+        adapter.setTracks(tracks)
         binding.searchRecycleView.visibility = View.VISIBLE
         binding.searchPlaceholderLayout.visibility = View.GONE
     }
 
-    private fun showInternetError() {
+    private fun showInternetError(message: String) {
         binding.searchRecycleView.visibility = View.GONE
         binding.searchPlaceholderLayout.visibility = View.VISIBLE
         binding.searchRefreshButton.visibility = View.VISIBLE
-        binding.searchPlaceholderText.text = getString(R.string.search_internet_error)
+        binding.searchPlaceholderText.text = message
         binding.searchPlaceholderIcon.setImageResource(R.drawable.connection_error_placeholder)
     }
 
-    private fun showTracksNotFound() {
+    private fun showTracksNotFound(message: String) {
         binding.searchRecycleView.visibility = View.GONE
         binding.searchPlaceholderLayout.visibility = View.VISIBLE
         binding.searchRefreshButton.visibility = View.GONE
-        binding.searchPlaceholderText.text = getString(R.string.search_not_found)
+        binding.searchPlaceholderText.text = message
         binding.searchPlaceholderIcon.setImageResource(R.drawable.no_tracks_found_placeholder)
     }
 
-    private fun initClickListeners() {
-        binding.btnSettingsBack.setOnClickListener({
-            finish()
-        })
-
-        binding.searchRefreshButton.setOnClickListener({
-            search(lastSearch)
-        })
+    private fun clearSearchHistory() {
+        viewModel.clearHistory()
+        adapter.setTracks(emptyList())
     }
 
-    private fun setRecyclerView() {
-        val adapter = SearchTrackAdapter(this::onTrackClick)
-        binding.searchRecycleView.adapter = adapter
+    private fun showHistory() {
+        if (adapter.isEmpty()) {
+            return
+        }
+
+        binding.apply {
+            searchHistoryTitle.isVisible = true
+            searchClearHistory.isVisible = true
+            searchRecycleView.isVisible = true
+        }
+    }
+
+    private fun hideHistory() {
+        binding.apply {
+            binding.searchHistoryTitle.isVisible = false
+            binding.searchClearHistory.isVisible = false
+            binding.searchRecycleView.isVisible = false
+        }
     }
 
     private fun onTrackClick(trackId: Long) {
-        val track = getTracksUseCase.getById(trackId) ?:
-        searchHistory.getTrackFromHistory(trackId) ?: return
-
-        searchHistory.addTrack(track)
-        val trackDetailsInfo = TrackDetailsInfoMapper.map(track)
-        AudioPlayerActivity.show(trackDetailsInfo, this)
+        viewModel.onTrackClicked(trackId)
     }
 
-    private fun setEditTextActions(savedInstanceState: Bundle?) {
-        val inputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-
-        val editText = binding.searchEditText
-        val clearBtn = binding.btnClearTextSearch
-
-
-        if (savedInstanceState != null) {
-            editText.setText(editTextValue)
-        }
-
-        clearBtn.setOnClickListener{
-            editText.setText("")
-            editTextValue = ""
-            lastSearch = ""
-            val adapter = binding.searchRecycleView.adapter as SearchTrackAdapter
-
-            if (searchHistory.isHistoryEmpty()) {
-                adapter.setTracks(emptyList())
-                binding.searchRecycleView.visibility = View.GONE
-            }
-
-            binding.searchPlaceholderLayout.visibility = View.GONE
-            inputMethodManager?.hideSoftInputFromWindow(editText.windowToken, 0)
-        }
-
-        val textWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
+    private fun setEditTextActions() {
+        textWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                clearBtn.visibility = setButtonVisibility(s)
-
-                if (!s.isNullOrEmpty()) {
-                    editTextValue = s.toString()
-                    searchDebounce()
-                    searchHistory.hideHistory()
-                } else {
-                    if (editText.hasFocus()) {
-                        searchHistory.showHistory()
-                    }
-                }
+                viewModel.onTextChanged(s)
             }
 
-            override fun afterTextChanged(s: Editable?) {
-
-            }
+            override fun afterTextChanged(s: Editable?) {}
         }
 
         editText.addTextChangedListener(textWatcher)
+
+        editText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                viewModel.search()
+            }
+            false
+        }
+
+        editText.setOnFocusChangeListener { _, hasFocus ->
+            viewModel.setFocus(hasFocus)
+        }
     }
 
-    private fun searchDebounce() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-    }
+    private fun initClickListeners() {
+        binding.btnSettingsBack.setOnClickListener {
+            finish()
+        }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(EDIT_TEXT_KEY, editTextValue)
+        binding.searchRefreshButton.setOnClickListener {
+            viewModel.search()
+        }
+
+        binding.searchClearHistory.setOnClickListener {
+            clearSearchHistory()
+            hideHistory()
+        }
+
+        binding.btnClearTextSearch.setOnClickListener {
+            viewModel.onTextChanged("")
+            binding.searchPlaceholderLayout.isVisible = false
+            (getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
+                ?.hideSoftInputFromWindow(editText.windowToken, 0)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        val editText = binding.searchEditText
-        editText.setText(editTextValue)
-        editText.setSelection(editTextValue.length)
 
-        if (editTextValue.isNotEmpty()) {
-            binding.searchRecycleView.visibility = View.VISIBLE
-        }
+        editText.setSelection(editText.text.length)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        editTextValue = savedInstanceState.getString(EDIT_TEXT_KEY, "")
-    }
-
-    private fun setButtonVisibility(s: CharSequence?): Int {
-        return if (s.isNullOrEmpty()) {
-            View.INVISIBLE
-        } else {
-            View.VISIBLE
-        }
-    }
-
-    companion object {
-        const val EDIT_TEXT_KEY = "editText"
-        const val SEARCH_DEBOUNCE_DELAY = 2000L
+    override fun onDestroy() {
+        super.onDestroy()
+        editText.removeTextChangedListener(textWatcher)
     }
 }

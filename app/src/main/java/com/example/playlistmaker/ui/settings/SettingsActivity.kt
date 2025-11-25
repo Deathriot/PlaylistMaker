@@ -1,21 +1,16 @@
 package com.example.playlistmaker.ui.settings
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.presentation.viewmodel.settings.SettingsViewModel
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
-
-    private val getDarkThemeUseCase = Creator.provideGetDarkThemeUseCase()
-    private val setDarkThemeUseCase = Creator.provideSetDarkThemeUseCase()
+    private lateinit var viewModel : SettingsViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,26 +23,19 @@ class SettingsActivity : AppCompatActivity() {
             insets
         }
 
+        val factory = SettingsViewModel.getFactory()
+        viewModel = ViewModelProvider(this, factory)[SettingsViewModel::class.java]
         initClickListeners()
         setSwitcher()
     }
 
     private fun setSwitcher() {
-        val switch = binding.themeSwitcher
-
-        getDarkThemeUseCase.execute {
-            switch.isChecked = it
+        viewModel.observeDarkTheme().observe(this){
+            binding.themeSwitcher.isChecked = it
         }
 
-        switch.setOnCheckedChangeListener { _, isChecked ->
-            setDarkThemeUseCase.execute(isChecked, {
-                AppCompatDelegate.setDefaultNightMode(
-                    if (it) {
-                        AppCompatDelegate.MODE_NIGHT_YES
-                    } else {
-                        AppCompatDelegate.MODE_NIGHT_NO
-                    })
-            })
+        binding.themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.changeDarkTheme(isChecked)
         }
     }
 
@@ -57,56 +45,15 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.btnShare.setOnClickListener {
-            startActivity(
-                Intent.createChooser(
-                    createShareIntent(),
-                    getString(R.string.share_title)
-                )
-            )
+            viewModel.share()
         }
 
         binding.btnSupport.setOnClickListener {
-            startActivity(
-                Intent.createChooser(
-                    createEmailIntent(),
-                    getString(R.string.contact_support)
-                )
-            )
+            viewModel.contactSupport()
         }
 
         binding.btnUserAgreement.setOnClickListener {
-            startActivity(createUserAgreementIntent())
+            viewModel.openUserAgreement()
         }
-    }
-
-    private fun createShareIntent(): Intent {
-        val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.type = "text/plain"
-        shareIntent.putExtra(
-            Intent.EXTRA_TEXT, getString(R.string.share_url)
-        )
-
-        return shareIntent
-    }
-
-    private fun createEmailIntent(): Intent {
-        val email = getString(R.string.email_name)
-        val subject = getString(R.string.email_title)
-        val body = getString(R.string.email_message)
-
-        val emailIntent = Intent(Intent.ACTION_SENDTO);
-
-        emailIntent.data = Uri.parse("mailto:");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
-
-        return emailIntent
-    }
-
-    private fun createUserAgreementIntent(): Intent {
-        val url = getString(R.string.user_agreement_url)
-        val agreementIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        return agreementIntent
     }
 }
