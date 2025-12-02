@@ -62,4 +62,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel)
 
     implementation(libs.koin)
+
+    implementation(libs.fragment)
+    implementation(libs.viewPager2)
 }

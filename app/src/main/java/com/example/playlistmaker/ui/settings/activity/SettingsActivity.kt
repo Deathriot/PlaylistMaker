@@ -39,7 +39,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun initClickListeners() {
         binding.settingsBack.setOnClickListener {
-            finish()
+            onBackPressedDispatcher.onBackPressed()
         }
 
         binding.btnShare.setOnClickListener {

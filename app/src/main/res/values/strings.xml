@@ -3,9 +3,12 @@
 <resources>
     <string name="app_name" translatable="false">Playlist Maker</string>
 
+    <!-- Главный экран -->
     <string name="search_btn" translatable="false">Поиск</string>
     <string name="media_library_btn" translatable="false">Медиатека</string>
     <string name="settings_btn" translatable="false">Настройки</string>
+
+    <!-- Настройки -->
     <string name="dark_theme" translatable="false">Темная тема</string>
     <string name="share_app" translatable="false">Поделиться приложением</string>
     <string name="contact_support" translatable="false">Написать в поддержку</string>
@@ -19,16 +22,27 @@
     <string name="email_title" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="email_message" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
 
+    <!-- Поиск -->
     <string name="search_clear_history" translatable="false">Очистить историю</string>
     <string name="search_history_title" translatable="false">Вы искали</string>
     <string name="search_internet_error" translatable="false">Проблемы со связью \n \n Загрузка не удалась. Проверьте подключение к интернету</string>
     <string name="search_not_found" translatable="false">Ничего не нашлось</string>
     <string name="search_refresh" translatable="false">Обновить</string>
-    
+
+    <!-- Плеер -->
     <string name="player_duration" translatable="false">Длительность</string>
     <string name="player_collection" translatable="false">Альбом</string>
     <string name="player_year" translatable="false">Год</string>
     <string name="player_genre" translatable="false">Жанр</string>
     <string name="player_country" translatable="false">Страна</string>
     <string name="default_timer_value" translatable="false">0:00</string>
+
+    <!-- Медиатека -->
+    <string name="media_title" translatable="false">Медиатека</string>
+    <string name="media_favorite_tracks" translatable="false">Избранные треки</string>
+    <string name="media_playlists" translatable="false">Плейлисты</string>
+    <string name="media_no_playlist_found" translatable="false">Вы не создали \n ни одного плейлиста</string>
+    <string name="media_is_empty" translatable="false">Ваша медиатека пуста</string>
+    <string name="media_new_playlist" translatable="false">Новый плейлист</string>
+
 </resources>

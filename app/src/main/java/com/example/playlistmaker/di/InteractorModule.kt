@@ -13,11 +13,11 @@ val interactorModule = module {
         MediaPlayerInteractorImpl(get())
     }
 
-    single<HistoryTrackInteractor> {
+    factory<HistoryTrackInteractor> {
         HistoryTrackInteractorImpl(get())
     }
 
-    single<SettingsInteractor> {
+    factory<SettingsInteractor> {
         SettingsInteractorImpl(get(), get(), get())
     }
 }
