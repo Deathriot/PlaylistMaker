@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
@@ -19,10 +18,13 @@ import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.ui.search.model.TrackDetailsInfo
 import com.example.playlistmaker.ui.audio_player.viewmodel.AudioPlayerViewModel
 import com.example.playlistmaker.ui.util.dpToPx
+import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.core.parameter.parametersOf
 
 class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAudioPlayerBinding
     private lateinit var currentTrack: TrackDetailsInfo
+
     private lateinit var viewModel: AudioPlayerViewModel
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -40,9 +42,8 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
 
         currentTrack = intent.getParcelableExtra(TRACK_DETAILS_INFO, TrackDetailsInfo::class.java)!!
-
-        val factory = AudioPlayerViewModel.getFactory(currentTrack.musicUrl)
-        viewModel = ViewModelProvider(this, factory)[AudioPlayerViewModel::class.java]
+        viewModel = getViewModel(parameters = { parametersOf(currentTrack.musicUrl) })
+        viewModel.prepare()
 
         setViewModelObservers()
         initClickListeners()
@@ -141,6 +142,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         super.onPause()
         viewModel.pause()
     }
+
 
     companion object {
         private const val CORNER_RADIUS = 8f

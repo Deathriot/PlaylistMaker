@@ -35,14 +35,15 @@ class MediaPlayerInteractorImpl(
     }
 
     override fun prepare(path: String, onPrepare: () -> Unit, onCompletion: () -> Unit) {
-        currentState = MediaPlayerState.STATE_PREPARED
-
         audioPlayer.prepare(
             path = path,
-            onPrepare = onPrepare,
-            onCompletion = {
+            onPrepare = {
+                onPrepare.invoke()
                 currentState = MediaPlayerState.STATE_PREPARED
+            },
+            onCompletion = {
                 onCompletion.invoke()
+                currentState = MediaPlayerState.STATE_PREPARED
             }
         )
     }
