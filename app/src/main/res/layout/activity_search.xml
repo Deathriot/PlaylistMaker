@@ -6,7 +6,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="?attr/colorSecondary"
+    android:background="?attr/colorSecondary"
     android:orientation="vertical"
     tools:context=".ui.search.activity.SearchActivity">
 
@@ -48,7 +48,7 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/search_height"
                 android:layout_margin="@dimen/normal_padding"
                 android:background="@drawable/search_edit_text_shape">
 
@@ -58,8 +58,10 @@
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+
                     android:layout_gravity="center"
                     android:layout_marginHorizontal="@dimen/normal_padding"
+                    android:paddingVertical="@dimen/minor_padding"
                     android:background="@null"
 
                     android:drawableStart="@drawable/search_icon_16x16"
@@ -68,8 +70,7 @@
 
                     android:inputType="text"
                     android:lines="1"
-                    android:maxLength="15"
-                    android:paddingVertical="@dimen/minor_padding"
+                    android:maxLength="20"
 
                     android:textColor="@color/black"
                     android:textCursorDrawable="@drawable/cursor" />

@@ -201,7 +201,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun initClickListeners() {
         binding.btnSettingsBack.setOnClickListener {
-            finish()
+            onBackPressedDispatcher.onBackPressed()
         }
 
         binding.searchRefreshButton.setOnClickListener {

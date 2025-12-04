@@ -17,7 +17,7 @@ class ExternalNavigatorImpl(
         }
 
         val chooserIntent = Intent.createChooser(shareIntent, title).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            flags = (Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
         context.startActivity(chooserIntent)
@@ -27,22 +27,23 @@ class ExternalNavigatorImpl(
         val agreementIntent = Intent().apply {
             action = Intent.ACTION_VIEW
             data = Uri.parse(url)
-            setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            flags = (Intent.FLAG_ACTIVITY_NEW_TASK)
         }
+
         context.startActivity(agreementIntent)
     }
 
     override fun openEmail(emailData: EmailData, title: String) {
-        val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+        val emailIntent = Intent().apply {
+            action = Intent.ACTION_SENDTO
             data = Uri.parse("mailto:")
             putExtra(Intent.EXTRA_EMAIL, arrayOf(emailData.email))
             putExtra(Intent.EXTRA_SUBJECT, emailData.subject)
             putExtra(Intent.EXTRA_TEXT, emailData.body)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
 
         val chooserIntent = Intent.createChooser(emailIntent, title).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            flags = (Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
         context.startActivity(chooserIntent)

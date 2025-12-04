@@ -62,19 +62,19 @@ val dataModule = module {
         Gson()
     }
 
-    single<DarkThemeInteractor> {
+    factory<DarkThemeInteractor> {
         DarkThemeInteractorImpl()
     }
 
-    single<ExternalNavigator> {
+    factory<ExternalNavigator> {
         ExternalNavigatorImpl(androidContext())
     }
 
-    single {
+    factory {
         SearchConstants(androidContext())
     }
 
-    single {
+    factory {
         SettingsConstants(androidContext())
     }
 }
