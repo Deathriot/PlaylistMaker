@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -65,4 +66,6 @@ dependencies {
 
     implementation(libs.fragment)
     implementation(libs.viewPager2)
+    implementation(libs.navigation.ui)
+    implementation(libs.navigation.fragment)
 }

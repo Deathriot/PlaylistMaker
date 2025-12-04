@@ -8,6 +8,8 @@
     <style name="Search_edit_text_style" parent="Regular_text_style">
         <item name="drawableTint">@color/black</item>
         <item name="android:textColorHint">@color/black</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="textAllCaps">false</item>
     </style>
 
     <style name="Settings_button_style" parent="Widget.AppCompat.Button.Borderless">
@@ -26,6 +28,7 @@
         <item name="android:textSize">@dimen/minor_text_size</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">400</item>
+        <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>
     </style>
 

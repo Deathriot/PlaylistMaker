@@ -14,7 +14,7 @@ object TrackMapper {
             releaseDate = trackDto.releaseDate,
             primaryGenreName = trackDto.primaryGenreName,
             country = trackDto.country,
-            musicUrl = trackDto.musicUrl,
+            musicUrl = trackDto.musicUrl!!,
             timeMillis = trackDto.timeMillis
         )
     }

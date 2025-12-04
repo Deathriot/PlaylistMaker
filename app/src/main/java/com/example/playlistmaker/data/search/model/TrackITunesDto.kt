@@ -31,6 +31,6 @@ class TrackITunesDto (
     override val country: String,
 
     @SerializedName("previewUrl")
-    override val musicUrl : String
+    override val musicUrl : String?
 ): TrackNetworkDto()
 
