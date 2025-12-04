@@ -1,61 +1,52 @@
-package com.example.playlistmaker.ui.audio_player.activity
+package com.example.playlistmaker.ui.audio_player.fragment
 
-import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivityAudioPlayerBinding
+import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
-import com.example.playlistmaker.ui.search.model.TrackDetailsInfo
 import com.example.playlistmaker.ui.audio_player.viewmodel.AudioPlayerViewModel
+import com.example.playlistmaker.ui.search.model.TrackDetailsInfo
 import com.example.playlistmaker.ui.util.dpToPx
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 
-class AudioPlayerActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityAudioPlayerBinding
-    private lateinit var currentTrack: TrackDetailsInfo
+class AudioPlayerFragment : Fragment() {
 
+    private lateinit var currentTrack: TrackDetailsInfo
     private lateinit var viewModel: AudioPlayerViewModel
 
+
+    private var _binding: FragmentAudioPlayerBinding? = null
+    private val binding get() = _binding!!
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityAudioPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        enableEdgeToEdge()
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.audioPlayer) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-
-        currentTrack = intent.getParcelableExtra(TRACK_DETAILS_INFO, TrackDetailsInfo::class.java)!!
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        currentTrack = requireArguments().getParcelable(ARGS_TRACKS, TrackDetailsInfo::class.java)!!
         viewModel = getViewModel(parameters = { parametersOf(currentTrack.musicUrl) })
         viewModel.prepare()
-
         setViewModelObservers()
         initClickListeners()
         setUI()
     }
 
     private fun setViewModelObservers() {
-        viewModel.observeTimer().observe(this) {
+        viewModel.observeTimer().observe(viewLifecycleOwner) {
             binding.playerTrackCurrentTime.text = it
         }
 
-        viewModel.observePlayerState().observe(this) {
+        viewModel.observePlayerState().observe(viewLifecycleOwner) {
             when (it) {
                 MediaPlayerState.STATE_DEFAULT -> {
                     binding.playerPlayBtn.isEnabled = false
@@ -96,7 +87,7 @@ class AudioPlayerActivity : AppCompatActivity() {
             .load(artUrl)
             .placeholder(R.drawable.ic_placeholder_45)
             .centerCrop()
-            .transform(RoundedCorners(dpToPx(CORNER_RADIUS, this)))
+            .transform(RoundedCorners(dpToPx(CORNER_RADIUS, requireContext())))
             .into(binding.playerTrackCover)
     }
 
@@ -129,13 +120,21 @@ class AudioPlayerActivity : AppCompatActivity() {
     private fun initClickListeners() {
         binding.apply {
             playerBackButton.setOnClickListener {
-                finish()
+                findNavController().navigateUp()
             }
-
             playerPlayBtn.setOnClickListener {
                 viewModel.changeState()
             }
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentAudioPlayerBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onPause() {
@@ -143,17 +142,16 @@ class AudioPlayerActivity : AppCompatActivity() {
         viewModel.pause()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
 
     companion object {
         private const val CORNER_RADIUS = 8f
-        private const val TRACK_DETAILS_INFO = "track_details"
 
-        fun show(track: TrackDetailsInfo, context: Context) {
-            val intent = Intent(context, AudioPlayerActivity::class.java).apply {
-                putExtra(TRACK_DETAILS_INFO, track)
-            }
-
-            context.startActivity(intent)
-        }
+        private const val ARGS_TRACKS = "track_details"
+        fun createArgs(track: TrackDetailsInfo) = bundleOf(ARGS_TRACKS to track)
     }
 }

@@ -6,6 +6,7 @@
     <dimen name="text_size_19">19sp</dimen>
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="text_size_13">13sp</dimen>
+    <dimen name="text_size_12">12</dimen>
 
     <dimen name="big_padding">24dp</dimen>
     <dimen name="normal_padding">14dp</dimen>
