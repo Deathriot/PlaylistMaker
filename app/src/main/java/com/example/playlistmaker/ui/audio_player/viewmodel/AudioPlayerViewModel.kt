@@ -1,21 +1,20 @@
 package com.example.playlistmaker.ui.audio_player.viewmodel
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.player.MediaPlayerInteractor
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.ui.search.mapper.TimeFormatter.formatTime
-
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class AudioPlayerViewModel(
     private val musicUrl: String,
     private val playerInteractor: MediaPlayerInteractor
 ) : ViewModel() {
-
-    private val handler = Handler(Looper.getMainLooper())
 
     private val playerState = MutableLiveData(MediaPlayerState.STATE_DEFAULT)
     fun observePlayerState(): LiveData<MediaPlayerState> = playerState
@@ -23,8 +22,7 @@ class AudioPlayerViewModel(
     private val timer = MutableLiveData(DEFAULT_TIMER_VALUE)
     fun observeTimer(): LiveData<String> = timer
 
-    private val timerRunnable = Runnable { startTimerUpdate() }
-
+    private var timerJob : Job? = null
     fun prepare() {
         playerInteractor.prepare(path = musicUrl,
             onPrepare = {
@@ -48,6 +46,10 @@ class AudioPlayerViewModel(
         onPause()
     }
 
+    fun release(){
+        playerInteractor.release()
+    }
+
     private fun onPause() {
         playerState.postValue(MediaPlayerState.STATE_PAUSED)
         pauseTimer()
@@ -55,22 +57,27 @@ class AudioPlayerViewModel(
 
     private fun onPlaying() {
         playerState.postValue(MediaPlayerState.STATE_PLAYING)
+        // По поводу нижней строчке написал в комментарии к пулреквесту
+        playerState.value = MediaPlayerState.STATE_PLAYING
         startTimerUpdate()
     }
 
     private fun resetTimer() {
         timer.postValue(DEFAULT_TIMER_VALUE)
-        handler.removeCallbacks(timerRunnable)
     }
 
     private fun pauseTimer() {
-        handler.removeCallbacks(timerRunnable)
+        timerJob?.cancel()
     }
 
     private fun startTimerUpdate() {
-        val currentTime = formatTime(playerInteractor.getCurrentTrackTime())
-        timer.postValue(currentTime)
-        handler.postDelayed(timerRunnable, TIMER_DELAY_MILLIS)
+        timerJob = viewModelScope.launch {
+            while (playerState.value == MediaPlayerState.STATE_PLAYING){
+                delay(TIMER_DELAY_MILLIS)
+                val currentTime = formatTime(playerInteractor.getCurrentTrackTime())
+                timer.postValue(currentTime)
+            }
+        }
     }
 
     override fun onCleared() {

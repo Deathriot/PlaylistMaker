@@ -147,6 +147,10 @@ class AudioPlayerFragment : Fragment() {
         _binding = null
     }
 
+    override fun onStop() {
+        super.onStop()
+        viewModel.release()
+    }
 
     companion object {
         private const val CORNER_RADIUS = 8f

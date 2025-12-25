@@ -68,4 +68,7 @@ dependencies {
     implementation(libs.viewPager2)
     implementation(libs.navigation.ui)
     implementation(libs.navigation.fragment)
+
+    implementation(libs.rxjava)
+    implementation(libs.coroutines)
 }
