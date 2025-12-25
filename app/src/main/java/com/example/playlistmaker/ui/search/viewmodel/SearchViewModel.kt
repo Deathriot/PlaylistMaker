@@ -9,6 +9,7 @@ import com.example.playlistmaker.domain.consumer.Consumer
 import com.example.playlistmaker.domain.search.GetTracksUseCase
 import com.example.playlistmaker.domain.search.HistoryTrackInteractor
 import com.example.playlistmaker.domain.search.model.Track
+import com.example.playlistmaker.ui.model.SingleLiveEvent
 import com.example.playlistmaker.ui.search.mapper.TrackDetailsInfoMapper
 import com.example.playlistmaker.ui.search.mapper.TrackInfoMapper
 import com.example.playlistmaker.ui.search.model.State
@@ -19,25 +20,27 @@ import com.example.playlistmaker.ui.search.viewmodel.model.SearchConstants
 
 class SearchViewModel(
     private val constants: SearchConstants,
-    private val getTracksUseCase : GetTracksUseCase,
-    private val historyInteractor : HistoryTrackInteractor
+    private val getTracksUseCase: GetTracksUseCase,
+    private val historyInteractor: HistoryTrackInteractor
 ) : ViewModel() {
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { search() }
 
-    private val searchState = MutableLiveData<State>()
+    private val searchState = SingleLiveEvent<State>()
     fun observeSearchState(): LiveData<State> = searchState
 
-    private val inputValue = MutableLiveData(EditTextState())
+    private val inputValue = MutableLiveData<EditTextState>()
     fun observeEditTextValue(): LiveData<EditTextState> = inputValue
 
-    private val trackDetails = MutableLiveData<TrackDetailsInfo>()
+    private val trackDetails = SingleLiveEvent<TrackDetailsInfo>()
     fun observeOnTrackClick(): LiveData<TrackDetailsInfo> = trackDetails
 
     private val historyTracks = MutableLiveData(getHistoryTracks())
     fun observeHistory(): LiveData<List<TrackInfo>> = historyTracks
 
-    private var isHistoryShown = true
+    init {
+        inputValue.postValue(EditTextState())
+    }
 
     fun search() {
         val text = inputValue.value?.text
@@ -74,12 +77,14 @@ class SearchViewModel(
         inputValue.postValue(EditTextState(text, inputValue.value!!.isFocused))
 
         if (text.isEmpty()) {
-            isHistoryShown = true
             historyTracks.postValue(getHistoryTracks())
             handler.removeCallbacks(searchRunnable)
         } else {
-            isHistoryShown = false
-            searchDebounce()
+            if (text == inputValue.value?.text) {
+                search()
+            } else {
+                searchDebounce()
+            }
         }
     }
 
@@ -91,14 +96,11 @@ class SearchViewModel(
         val track = getTracksUseCase.getById(id) ?: historyInteractor.getTrackById(id)
         ?: return
 
+        handler.removeCallbacks(searchRunnable)
         historyInteractor.addTrack(track)
         val trackDetailsInfo = TrackDetailsInfoMapper.map(track)
 
         trackDetails.postValue(trackDetailsInfo)
-
-        if (isHistoryShown) {
-            historyTracks.postValue(getHistoryTracks())
-        }
     }
 
     private fun getHistoryTracks(): List<TrackInfo> {

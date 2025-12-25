@@ -20,5 +20,5 @@ abstract class  TrackNetworkDto {
 
     abstract val country: String
 
-    abstract val musicUrl: String
+    abstract val musicUrl: String?
 }
