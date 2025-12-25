@@ -97,15 +97,17 @@
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+
         android:background="@android:color/transparent"
         android:enabled="false"
         android:src="@drawable/ic_audio_player_play_btn_83"
 
+        app:layout_constraintVertical_bias="0.35"
+
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/player_track_artist" />
+        app:layout_constraintTop_toBottomOf="@id/player_track_artist"
+        app:layout_constraintBottom_toTopOf="@id/player_track_duration_name"/>
 
     <ImageButton
         android:id="@+id/player_add_playlist_btn"
@@ -165,14 +167,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginTop="@dimen/normal_padding"
+        android:layout_marginVertical="@dimen/normal_padding"
         android:text="@string/player_duration"
-
         android:textColor="@color/gray"
-        app:layout_constraintStart_toEndOf="@id/left_border"
 
-        app:layout_constraintTag="duration_name_tag"
-        app:layout_constraintTop_toBottomOf="@id/player_track_current_time" />
+        app:layout_constraintStart_toEndOf="@id/left_border"
+        app:layout_constraintBottom_toTopOf="@id/player_track_collection_name"
+
+        app:layout_constraintTag="duration_name_tag" />
 
     <TextView
         android:id="@+id/player_track_collection_name"
@@ -180,15 +182,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginTop="@dimen/normal_padding"
-        android:text="@string/player_collection"
+        android:layout_marginVertical="@dimen/normal_padding"
 
+        android:text="@string/player_collection"
         android:textColor="@color/gray"
+
+        app:layout_constraintBottom_toTopOf="@id/player_release_year_name"
         app:layout_constraintStart_toEndOf="@id/left_border"
 
-        app:layout_constraintTag="collection_name_tag"
-
-        app:layout_constraintTop_toBottomOf="@id/player_track_duration_name" />
+        app:layout_constraintTag="collection_name_tag" />
 
     <TextView
         android:id="@+id/player_track_collection"
@@ -213,16 +215,15 @@
         style="@style/Audio_player_track_info_text_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/normal_padding"
 
-        android:layout_marginTop="@dimen/normal_padding"
         android:text="@string/player_year"
-
         android:textColor="@color/gray"
+
         app:layout_constraintStart_toEndOf="@id/left_border"
+        app:layout_constraintBottom_toTopOf="@id/player_genre_name"
 
-        app:layout_constraintTag="release_year_name_tag"
-
-        app:layout_constraintTop_toBottomOf="@id/player_track_collection_name" />
+        app:layout_constraintTag="release_year_name_tag" />
 
     <TextView
         android:id="@+id/player_genre_name"
@@ -230,31 +231,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginTop="@dimen/normal_padding"
+        android:layout_marginVertical="@dimen/normal_padding"
         android:text="@string/player_genre"
-
         android:textColor="@color/gray"
+
         app:layout_constraintStart_toEndOf="@id/left_border"
-
-        app:layout_constraintTag="genre_name_tag"
-
-        app:layout_constraintTop_toBottomOf="@id/player_release_year_name" />
+        app:layout_constraintBottom_toTopOf="@id/player_country_name"
+        app:layout_constraintTag="genre_name_tag" />
 
     <TextView
         android:id="@+id/player_country_name"
         style="@style/Audio_player_track_info_text_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/normal_padding"
 
-        android:layout_marginTop="@dimen/normal_padding"
         android:text="@string/player_country"
-
         android:textColor="@color/gray"
+
         app:layout_constraintStart_toEndOf="@id/left_border"
+        app:layout_constraintBottom_toBottomOf="parent"
 
-        app:layout_constraintTag="country_name_tag"
-
-        app:layout_constraintTop_toBottomOf="@id/player_genre_name" />
+        app:layout_constraintTag="country_name_tag" />
 
     <TextView
         android:id="@+id/player_release_year"
