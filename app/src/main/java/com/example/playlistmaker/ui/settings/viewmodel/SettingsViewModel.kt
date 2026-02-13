@@ -7,14 +7,14 @@ import com.example.playlistmaker.domain.settings.SettingsInteractor
 import com.example.playlistmaker.ui.settings.viewmodel.model.SettingsConstants
 
 class SettingsViewModel(
-    private val constants: SettingsConstants,
-    private val interactor : SettingsInteractor
-
+    private val interactor: SettingsInteractor
 ) : ViewModel() {
 
     private val isDarkTheme = MutableLiveData<Boolean>()
 
     fun observeDarkTheme(): LiveData<Boolean> = isDarkTheme
+
+    private lateinit var constants: SettingsConstants
 
     init {
         getDarkTheme()
@@ -35,6 +35,10 @@ class SettingsViewModel(
 
     fun contactSupport() {
         interactor.contactSupport(constants.emailData, constants.contactSupportTitle)
+    }
+
+    fun setConstants(constants: SettingsConstants) {
+        this.constants = constants
     }
 
     private fun getDarkTheme() {

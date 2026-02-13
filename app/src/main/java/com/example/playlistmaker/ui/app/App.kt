@@ -30,6 +30,7 @@ class App : Application() {
                 else AppCompatDelegate.MODE_NIGHT_NO
             )
         }
+
     }
 
     companion object {
