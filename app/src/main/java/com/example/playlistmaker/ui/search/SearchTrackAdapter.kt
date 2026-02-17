@@ -3,18 +3,17 @@ package com.example.playlistmaker.ui.search
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.playlistmaker.databinding.ClearHistoryButtonBinding
 import com.example.playlistmaker.databinding.TrackBinding
 import com.example.playlistmaker.ui.search.model.TrackInfo
+import com.example.playlistmaker.ui.util.adapter.TrackAdapter
 
 class SearchTrackAdapter(
     private val onClick: (trackId: Long) -> Unit,
     private val clearBinding: ClearHistoryButtonBinding
-) : Adapter<RecyclerView.ViewHolder>() {
+) : TrackAdapter(onClick) {
 
     private var isHistoryShown = true
-    private var tracks: List<TrackInfo> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -48,20 +47,14 @@ class SearchTrackAdapter(
         return tracks.size
     }
 
-    fun setTracks(newTracks: List<TrackInfo>) {
+    override fun setNewTracks(newTracks: List<TrackInfo>) {
+        super.setNewTracks(newTracks)
         isHistoryShown = false
-        tracks = newTracks
-        notifyDataSetChanged()
     }
 
     fun setHistoryTracks(newTracks: List<TrackInfo>) {
+        super.setNewTracks(newTracks)
         isHistoryShown = true
-        tracks = newTracks
-        notifyDataSetChanged()
-    }
-
-    fun isEmpty(): Boolean {
-        return tracks.isEmpty()
     }
 
     override fun getItemViewType(position: Int): Int {

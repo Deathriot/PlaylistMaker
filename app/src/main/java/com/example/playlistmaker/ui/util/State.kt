@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.search.model
+package com.example.playlistmaker.ui.util
 
 sealed interface State {
 

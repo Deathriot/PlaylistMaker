@@ -12,7 +12,7 @@ class TrackRepositoryImpl(
     private val trackNetworkClient: TrackNetworkClient
 ) : TrackRepository {
     private var currentTitle = ""
-    private var trackList: List<Track>? = ArrayList()
+    private var trackList: List<Track>? = listOf()
 
 
     override fun getTracks(title: String): Flow<Result<List<Track>?>> {

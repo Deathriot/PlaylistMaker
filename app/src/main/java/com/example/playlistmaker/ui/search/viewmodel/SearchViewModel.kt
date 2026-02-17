@@ -10,7 +10,7 @@ import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.ui.model.SingleLiveEvent
 import com.example.playlistmaker.ui.search.mapper.TrackDetailsInfoMapper
 import com.example.playlistmaker.ui.search.mapper.TrackInfoMapper
-import com.example.playlistmaker.ui.search.model.State
+import com.example.playlistmaker.ui.util.State
 import com.example.playlistmaker.ui.search.model.TrackDetailsInfo
 import com.example.playlistmaker.ui.search.model.TrackInfo
 import com.example.playlistmaker.ui.search.viewmodel.model.EditTextState
@@ -86,7 +86,7 @@ class SearchViewModel(
 
         Debouncer.cancel()
         historyInteractor.addTrack(track)
-        val trackDetailsInfo = TrackDetailsInfoMapper.map(track)
+        val trackDetailsInfo = TrackDetailsInfoMapper.mapToTrackDetailsInfo(track)
 
         trackDetails.postValue(trackDetailsInfo)
     }

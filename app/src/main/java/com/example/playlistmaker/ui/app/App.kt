@@ -3,6 +3,7 @@ package com.example.playlistmaker.ui.app
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.di.dataModule
+import com.example.playlistmaker.di.databaseModule
 import com.example.playlistmaker.di.interactorModule
 import com.example.playlistmaker.di.repositoryModule
 import com.example.playlistmaker.di.useCaseModule
@@ -13,14 +14,21 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
 class App : Application() {
-    private val getDarkThemeUseCase : GetDarkThemeUseCase by inject()
+    private val getDarkThemeUseCase: GetDarkThemeUseCase by inject()
 
     override fun onCreate() {
         super.onCreate()
 
         startKoin {
             androidContext(this@App)
-            modules(useCaseModule, interactorModule, repositoryModule, viewModelModule, dataModule)
+            modules(
+                useCaseModule,
+                interactorModule,
+                repositoryModule,
+                viewModelModule,
+                dataModule,
+                databaseModule
+            )
         }
 
 
@@ -37,5 +45,6 @@ class App : Application() {
         const val APP_SHARED_PREFERENCES = "app_prefs"
         const val SEARCH_HISTORY_KEY = "search_history"
         const val THEME_KEY = "theme"
+        const val FAVORITE_TRACKS_TABLE_NAME = "favorite_tracks"
     }
 }

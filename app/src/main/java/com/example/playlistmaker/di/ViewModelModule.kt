@@ -3,14 +3,15 @@ package com.example.playlistmaker.di
 import com.example.playlistmaker.ui.audio_player.viewmodel.AudioPlayerViewModel
 import com.example.playlistmaker.ui.media.viewmodel.FavoriteTracksViewModel
 import com.example.playlistmaker.ui.media.viewmodel.PlaylistsViewModel
+import com.example.playlistmaker.ui.search.model.TrackDetailsInfo
 import com.example.playlistmaker.ui.search.viewmodel.SearchViewModel
 import com.example.playlistmaker.ui.settings.viewmodel.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel { (musicUrl: String) ->
-        AudioPlayerViewModel(musicUrl, get())
+    viewModel { (track: TrackDetailsInfo) ->
+        AudioPlayerViewModel(track, get(), get())
     }
 
     viewModel {
@@ -22,7 +23,7 @@ val viewModelModule = module {
     }
 
     viewModel {
-        FavoriteTracksViewModel()
+        FavoriteTracksViewModel(get())
     }
 
     viewModel {

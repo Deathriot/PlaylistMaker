@@ -20,7 +20,7 @@ import com.example.playlistmaker.databinding.FragmentSearchBinding
 import com.example.playlistmaker.ui.audio_player.fragment.AudioPlayerFragment
 import com.example.playlistmaker.ui.root.activity.RootActivity
 import com.example.playlistmaker.ui.search.SearchTrackAdapter
-import com.example.playlistmaker.ui.search.model.State
+import com.example.playlistmaker.ui.util.State
 import com.example.playlistmaker.ui.search.model.TrackInfo
 import com.example.playlistmaker.ui.search.viewmodel.SearchViewModel
 import com.example.playlistmaker.ui.search.viewmodel.model.SearchConstants
@@ -148,7 +148,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun showTrackList(tracks: List<TrackInfo>) {
-        adapter.setTracks(tracks)
+        adapter.setNewTracks(tracks)
         binding.searchRecycleView.visibility = View.VISIBLE
         binding.searchPlaceholderLayout.visibility = View.GONE
     }
@@ -171,7 +171,7 @@ class SearchFragment : Fragment() {
 
     private fun clearSearchHistory() {
         searchViewModel.clearHistory()
-        adapter.setTracks(emptyList())
+        adapter.setNewTracks(emptyList())
     }
 
     private fun showHistory() {

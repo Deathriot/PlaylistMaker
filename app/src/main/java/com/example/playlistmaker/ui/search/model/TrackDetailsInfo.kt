@@ -23,5 +23,7 @@ data class TrackDetailsInfo(
 
     val country: String,
 
-    val musicUrl: String
+    val musicUrl: String,
+
+    val isFavorite : Boolean
 ) : Parcelable
