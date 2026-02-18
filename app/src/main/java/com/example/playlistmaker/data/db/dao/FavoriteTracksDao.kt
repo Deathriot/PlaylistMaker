@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.playlistmaker.data.db.model.TrackEntity
 import com.example.playlistmaker.ui.app.App
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FavoriteTracksDao {
@@ -18,11 +19,11 @@ interface FavoriteTracksDao {
     suspend fun deleteTrack(trackEntity: TrackEntity)
 
     @Query("SELECT * FROM ${App.FAVORITE_TRACKS_TABLE_NAME} ORDER BY track_created_at DESC")
-    suspend fun getAllTracks(): List<TrackEntity>
+    fun getAllTracks(): Flow<List<TrackEntity>>
 
     @Query("SELECT track_id FROM ${App.FAVORITE_TRACKS_TABLE_NAME}")
-    suspend fun getAllTrackId() : List<Long>
+    fun getAllTrackId(): Flow<List<Long>>
 
     @Query("SELECT * FROM ${App.FAVORITE_TRACKS_TABLE_NAME} WHERE track_id = :id")
-    suspend fun getTrackById(id : Long) : TrackEntity?
+    fun getTrackById(id: Long): Flow<TrackEntity?>
 }

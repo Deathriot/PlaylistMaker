@@ -12,6 +12,7 @@ import com.example.playlistmaker.ui.search.mapper.TrackInfoMapper
 import com.example.playlistmaker.ui.search.model.TrackDetailsInfo
 import com.example.playlistmaker.ui.util.Debouncer
 import com.example.playlistmaker.ui.util.State
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class FavoriteTracksViewModel(
@@ -29,15 +30,16 @@ class FavoriteTracksViewModel(
 
     fun onTrackClicked(id: Long) {
         viewModelScope.launch {
-            favoriteTracksInteractor.getTrack(id).collect {
-                if (it == null) {
-                    throw TrackNotFoundException()
-                } else {
-                    val trackDetailsInfo =
-                        TrackDetailsInfoMapper.mapFromFavoriteTrackToTrackDetailsInfo(it)
-                    trackDetails.postValue(trackDetailsInfo)
-                }
+            val track = favoriteTracksInteractor.getTrack(id).first()
+
+            if (track == null) {
+                throw TrackNotFoundException()
+            } else {
+                val trackDetailsInfo =
+                    TrackDetailsInfoMapper.mapFromFavoriteTrackToTrackDetailsInfo(track)
+                trackDetails.postValue(trackDetailsInfo)
             }
+
             Debouncer.cancel()
         }
     }

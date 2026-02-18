@@ -42,36 +42,42 @@ class AudioPlayerFragment : Fragment() {
     }
 
     private fun setViewModelObservers() {
-        viewModel.observeTimer().observe(viewLifecycleOwner) {
-            binding.playerTrackCurrentTime.text = it
-        }
-
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
-            when (it) {
-                MediaPlayerState.STATE_DEFAULT -> {
-                    binding.playerPlayBtn.isEnabled = false
-                }
-
-                MediaPlayerState.STATE_PREPARED -> {
-                    binding.playerPlayBtn.isEnabled = true
-                    binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_play_btn_83)
-                }
-
-                MediaPlayerState.STATE_PLAYING -> {
-                    binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_pause_btn_83)
-                }
-
-                MediaPlayerState.STATE_PAUSED -> {
-                    binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_play_btn_83)
-                }
-            }
+            onMediaState(it.mediaState)
+            onTimer(it.timer)
+            onLike(it.isLiked)
         }
+    }
 
-        viewModel.observeIsLiked().observe(viewLifecycleOwner){
-            if(it){
-                binding.playerLikeBtn.setImageResource(R.drawable.ic_audio_player_active_like_btn_51)
-            } else {
-                binding.playerLikeBtn.setImageResource(R.drawable.ic_audio_player_inactive_like_btn_51)
+    private fun onLike(isLiked: Boolean) {
+        if (isLiked) {
+            binding.playerLikeBtn.setImageResource(R.drawable.ic_audio_player_active_like_btn_51)
+        } else {
+            binding.playerLikeBtn.setImageResource(R.drawable.ic_audio_player_inactive_like_btn_51)
+        }
+    }
+
+    private fun onTimer(timer: String) {
+        binding.playerTrackCurrentTime.text = timer
+    }
+
+    private fun onMediaState(mediaState: MediaPlayerState) {
+        when (mediaState) {
+            MediaPlayerState.STATE_DEFAULT -> {
+                binding.playerPlayBtn.isEnabled = false
+            }
+
+            MediaPlayerState.STATE_PREPARED -> {
+                binding.playerPlayBtn.isEnabled = true
+                binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_play_btn_83)
+            }
+
+            MediaPlayerState.STATE_PLAYING -> {
+                binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_pause_btn_83)
+            }
+
+            MediaPlayerState.STATE_PAUSED -> {
+                binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_play_btn_83)
             }
         }
     }
@@ -133,7 +139,7 @@ class AudioPlayerFragment : Fragment() {
             playerPlayBtn.setOnClickListener {
                 viewModel.changeState()
             }
-            playerLikeBtn.setOnClickListener{
+            playerLikeBtn.setOnClickListener {
                 viewModel.changeLikeState()
             }
         }

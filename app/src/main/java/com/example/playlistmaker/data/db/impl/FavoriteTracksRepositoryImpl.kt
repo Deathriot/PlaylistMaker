@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class FavoriteTracksRepositoryImpl(
@@ -26,26 +27,32 @@ class FavoriteTracksRepositoryImpl(
         }
     }
 
-    override fun getAllTracks(): Flow<List<Track>> = flow {
-        emit(
-            database.getFavoriteTracksDao().getAllTracks()
-                .map { TrackEntityConvertor.convertToTrack(it) })
+    override fun getAllTracks(): Flow<List<Track>> {
+        return database.getFavoriteTracksDao()
+            .getAllTracks()
+            .map {
+                it.map { trackEntity ->
+                    TrackEntityConvertor.convertToTrack(trackEntity)
+                }
+            }.flowOn(Dispatchers.IO)
+    }
 
-    }.flowOn(Dispatchers.IO)
 
-    override fun getAllTrackId(): Flow<List<Long>> = flow {
-        emit(database.getFavoriteTracksDao().getAllTrackId())
-    }.flowOn(Dispatchers.IO)
+    override fun getAllTrackId(): Flow<List<Long>> {
+        return database.getFavoriteTracksDao()
+            .getAllTrackId()
+            .flowOn(Dispatchers.IO)
+    }
 
-    override fun getTrack(id: Long): Flow<Track?> = flow {
-
-        val trackEntity = database.getFavoriteTracksDao().getTrackById(id)
-
-        if (trackEntity == null) {
-            emit(null)
-        } else {
-            emit(TrackEntityConvertor.convertToTrack(trackEntity))
-        }
-
-    }.flowOn(Dispatchers.IO)
+    override fun getTrack(id: Long): Flow<Track?> {
+        return database.getFavoriteTracksDao()
+            .getTrackById(id)
+            .map {
+                if (it == null) {
+                    null
+                } else {
+                    TrackEntityConvertor.convertToTrack(it)
+                }
+            }.flowOn(Dispatchers.IO)
+    }
 }

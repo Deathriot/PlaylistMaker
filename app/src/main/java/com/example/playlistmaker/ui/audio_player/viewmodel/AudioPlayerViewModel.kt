@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.db.FavoriteTracksInteractor
 import com.example.playlistmaker.domain.player.MediaPlayerInteractor
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
+import com.example.playlistmaker.ui.audio_player.model.PlayerState
 import com.example.playlistmaker.ui.search.mapper.TimeFormatter.formatTime
 import com.example.playlistmaker.ui.search.mapper.TrackDetailsInfoMapper
 import com.example.playlistmaker.ui.search.model.TrackDetailsInfo
@@ -19,24 +20,22 @@ class AudioPlayerViewModel(
     private val playerInteractor: MediaPlayerInteractor,
     private val favoriteTracksInteractor: FavoriteTracksInteractor
 ) : ViewModel() {
-    private val playerState = MutableLiveData(MediaPlayerState.STATE_DEFAULT)
-    fun observePlayerState(): LiveData<MediaPlayerState> = playerState
+    private val playerState = createPlayerState()
 
-    private val timer = MutableLiveData(DEFAULT_TIMER_VALUE)
-    fun observeTimer(): LiveData<String> = timer
-
-    private val isLiked = MutableLiveData(track.isFavorite)
-    fun observeIsLiked(): LiveData<Boolean> = isLiked
+    private val playerStateLiveData = MutableLiveData(playerState)
+    fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
 
     private var timerJob: Job? = null
 
     fun prepare() {
         playerInteractor.prepare(path = track.musicUrl,
             onPrepare = {
-                playerState.postValue(MediaPlayerState.STATE_PREPARED)
+                playerState.mediaState = MediaPlayerState.STATE_PREPARED
+                playerStateLiveData.postValue(playerState)
             },
             onCompletion = {
-                playerState.postValue(MediaPlayerState.STATE_PREPARED)
+                playerState.mediaState = MediaPlayerState.STATE_PREPARED
+                playerStateLiveData.postValue(playerState)
                 resetTimer()
             })
 
@@ -44,7 +43,7 @@ class AudioPlayerViewModel(
     }
 
     fun changeLikeState() {
-        val liked = isLiked.value!!
+        val liked = playerState.isLiked
 
         viewModelScope.launch {
             val favTrack = TrackDetailsInfoMapper.mapToTrack(track)
@@ -54,7 +53,8 @@ class AudioPlayerViewModel(
             } else {
                 favoriteTracksInteractor.addTrack(favTrack)
             }
-            isLiked.postValue(!liked)
+            playerState.isLiked = !liked
+            playerStateLiveData.postValue(playerState)
         }
     }
 
@@ -74,35 +74,48 @@ class AudioPlayerViewModel(
         playerInteractor.release()
     }
 
+    private fun createPlayerState(): PlayerState {
+        return PlayerState(
+            MediaPlayerState.STATE_DEFAULT,
+            DEFAULT_TIMER_VALUE,
+            track.isFavorite
+        )
+    }
+
     private fun isFavorite() {
-        if(track.isFavorite){
+        if (track.isFavorite) {
             return
         }
 
         viewModelScope.launch {
             favoriteTracksInteractor.getTrack(track.id).collect {
-                if(it == null){
-                    isLiked.postValue(false)
+                if (it == null) {
+                    playerState.isLiked = false
+                    playerStateLiveData.postValue(playerState)
                 } else {
-                    isLiked.postValue(true)
+                    playerState.isLiked = true
+                    playerStateLiveData.postValue(playerState)
                 }
             }
         }
     }
 
     private fun onPause() {
-        playerState.postValue(MediaPlayerState.STATE_PAUSED)
+        playerState.mediaState = MediaPlayerState.STATE_PAUSED
+        playerStateLiveData.postValue(playerState)
         pauseTimer()
     }
 
     private fun onPlaying() {
-        playerState.postValue(MediaPlayerState.STATE_PLAYING)
-        playerState.value = MediaPlayerState.STATE_PLAYING
+        playerState.mediaState = MediaPlayerState.STATE_PLAYING
+        playerStateLiveData.postValue(playerState)
+        playerStateLiveData.value = playerState
         startTimerUpdate()
     }
 
     private fun resetTimer() {
-        timer.postValue(DEFAULT_TIMER_VALUE)
+        playerState.timer = DEFAULT_TIMER_VALUE
+        playerStateLiveData.postValue(playerState)
     }
 
     private fun pauseTimer() {
@@ -111,10 +124,11 @@ class AudioPlayerViewModel(
 
     private fun startTimerUpdate() {
         timerJob = viewModelScope.launch {
-            while (playerState.value == MediaPlayerState.STATE_PLAYING) {
+            while (playerStateLiveData.value?.mediaState == MediaPlayerState.STATE_PLAYING) {
                 delay(TIMER_DELAY_MILLIS)
                 val currentTime = formatTime(playerInteractor.getCurrentTrackTime())
-                timer.postValue(currentTime)
+                playerState.timer = currentTime
+                playerStateLiveData.postValue(playerState)
             }
         }
     }
