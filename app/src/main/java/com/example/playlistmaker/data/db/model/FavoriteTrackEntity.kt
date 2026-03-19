@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 import com.example.playlistmaker.ui.app.App
 
 @Entity(tableName = App.FAVORITE_TRACKS_TABLE_NAME)
-data class TrackEntity(
+data class FavoriteTrackEntity(
 
     @PrimaryKey
     @ColumnInfo(name = "track_id")
@@ -40,9 +40,6 @@ data class TrackEntity(
 
     @ColumnInfo(name = "track_musicUrl", typeAffinity = TEXT)
     val musicUrl: String,
-
-    @ColumnInfo(name = "track_is_favorite", typeAffinity = INTEGER)
-    var isFavorite: Boolean = false,
 
     @ColumnInfo("track_created_at", typeAffinity = INTEGER)
     val createdAt: Long = System.currentTimeMillis()

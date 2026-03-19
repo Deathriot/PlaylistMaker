@@ -29,7 +29,6 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.07" />
 
-
     <TextView
         style="@style/Medium_text_style"
         android:layout_width="wrap_content"

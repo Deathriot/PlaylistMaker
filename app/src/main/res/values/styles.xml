@@ -71,12 +71,26 @@
         <item name="tabTextAppearance">@style/MediaTabTextAppearance</item>
     </style>
 
+    <style name="New_Playlist_Text_Box_style" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/new_playlist_text_box_color</item>
+        <item name="android:textColorHint">?attr/colorOnSecondary</item>
+        <item name="hintTextColor">@color/gray_to_white</item>
+        <item name="hintTextAppearance">@style/Text_input_hint_style</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+    </style>
+
     <style name="MediaTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>
         <item name="android:textSize">@dimen/text_size_14</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="Text_input_hint_style" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
     </style>
 
     <style name="Func_button_text_style">
@@ -95,6 +109,12 @@
         <item name="android:textSize">@dimen/text_size_19</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textFontWeight">400</item>
+    </style>
+
+    <style name="Player_bottom_sheet_title_text_style">
+        <item name="android:textSize">@dimen/text_size_19</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
     </style>
 
     <style name="Regular_text_style">
@@ -117,6 +137,12 @@
 
     <style name="Bottom_navigation_text_style">
         <item name="android:textSize">@dimen/text_size_12</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
+    <style name="New_playlist_toast_text_style">
+        <item name="android:textSize">@dimen/text_size_14</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
     </style>

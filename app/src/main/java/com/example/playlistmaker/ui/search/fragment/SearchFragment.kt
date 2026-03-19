@@ -237,7 +237,6 @@ class SearchFragment : Fragment() {
             hideHistory()
         }
 
-
         binding.btnClearTextSearch.setOnClickListener {
             searchViewModel.onTextChanged("")
             binding.searchPlaceholderLayout.isVisible = false

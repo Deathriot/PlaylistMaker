@@ -6,11 +6,13 @@ import com.example.playlistmaker.data.search.impl.TrackRetrofitITunesNetworkClie
 import com.example.playlistmaker.data.search.itunes.ITunesApi
 import com.example.playlistmaker.data.settings.impl.DarkThemeInteractorImpl
 import com.example.playlistmaker.data.sharing.ExternalNavigatorImpl
+import com.example.playlistmaker.data.storage.ImageStorageClient
 import com.example.playlistmaker.data.storage.PrefsStorageClient
 import com.example.playlistmaker.domain.player.model.AudioPlayer
 import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.domain.settings.DarkThemeInteractor
 import com.example.playlistmaker.domain.sharing.ExternalNavigator
+import com.example.playlistmaker.domain.storage.FileStorageClient
 import com.example.playlistmaker.domain.storage.StorageClient
 import com.example.playlistmaker.ui.app.App
 import com.example.playlistmaker.ui.search.viewmodel.model.SearchConstants
@@ -39,6 +41,13 @@ val dataModule = module {
             App.SEARCH_HISTORY_KEY,
             object : TypeToken<ArrayList<Track>>() {}.type,
             App.APP_SHARED_PREFERENCES
+        )
+    }
+
+    factory<FileStorageClient> {
+        ImageStorageClient(
+            androidContext(),
+            App.PLAYLIST_COVERS
         )
     }
 

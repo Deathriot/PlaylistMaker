@@ -10,6 +10,7 @@ val databaseModule = module {
         Room.databaseBuilder(
             androidContext(), PlayListMakerRoomDatabase::class.java, DATABASE_NAME
         )
+            .fallbackToDestructiveMigration(true)
             .build()
     }
 }

@@ -9,6 +9,7 @@ import com.example.playlistmaker.di.repositoryModule
 import com.example.playlistmaker.di.useCaseModule
 import com.example.playlistmaker.di.viewModelModule
 import com.example.playlistmaker.domain.settings.GetDarkThemeUseCase
+import com.markodevcic.peko.PermissionRequester
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -18,9 +19,9 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
+        PermissionRequester.initialize(applicationContext)
         startKoin {
-            androidContext(this@App)
+            androidContext(this@App.applicationContext)
             modules(
                 useCaseModule,
                 interactorModule,
@@ -31,20 +32,23 @@ class App : Application() {
             )
         }
 
-
         getDarkThemeUseCase.execute {
             AppCompatDelegate.setDefaultNightMode(
                 if (it) AppCompatDelegate.MODE_NIGHT_YES
                 else AppCompatDelegate.MODE_NIGHT_NO
             )
         }
-
     }
 
     companion object {
         const val APP_SHARED_PREFERENCES = "app_prefs"
         const val SEARCH_HISTORY_KEY = "search_history"
         const val THEME_KEY = "theme"
-        const val FAVORITE_TRACKS_TABLE_NAME = "favorite_tracks"
+
+        const val FAVORITE_TRACKS_TABLE_NAME = "table_favorite_tracks"
+        const val PLAYLIST_TRACKS_TABLE_NAME = "table_playlist_tracks"
+        const val PLAYLIST_TABLE_NAME = "table_playlists"
+
+        const val PLAYLIST_COVERS = "covers"
     }
 }

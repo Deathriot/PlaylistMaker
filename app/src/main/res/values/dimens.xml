@@ -6,19 +6,25 @@
     <dimen name="text_size_19">19sp</dimen>
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="text_size_13">13sp</dimen>
-    <dimen name="text_size_12">12</dimen>
+    <dimen name="text_size_12">12sp</dimen>
 
     <dimen name="big_padding">24dp</dimen>
+    <dimen name="medium_padding">18dp</dimen>
+    <dimen name="negative_normal_padding">-14dp</dimen>
     <dimen name="normal_padding">14dp</dimen>
+    <dimen name="padding_12">12dp</dimen>
     <dimen name="minor_padding">8dp</dimen>
     <dimen name="mini_padding">5dp</dimen>
     <dimen name="settings_vertical_button_padding">20dp</dimen>
     <dimen name="normal_button_margin">4dp</dimen>
     <dimen name="icon_padding">8dp</dimen>
+    <dimen name="padding_3">3dp</dimen>
+    <dimen name="padding_1">1dp</dimen>
 
+    <dimen name="corner_radius_8">8dp</dimen>
     <dimen name="normal_button_radius">16dp</dimen>
+    <dimen name="corner_radius_44">44dp</dimen>
     <dimen name="button_radius_54">54dp</dimen>
 
     <dimen name="search_height">38dp</dimen>
-
 </resources>

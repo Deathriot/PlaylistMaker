@@ -5,25 +5,43 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.db.FavoriteTracksInteractor
+import com.example.playlistmaker.domain.media.GetAllPlaylistsUseCase
+import com.example.playlistmaker.domain.player.AddTrackToPlaylistUseCase
 import com.example.playlistmaker.domain.player.MediaPlayerInteractor
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
+import com.example.playlistmaker.ui.audio_player.model.AddedToPlaylistState
 import com.example.playlistmaker.ui.audio_player.model.PlayerState
+import com.example.playlistmaker.ui.media.converter.PlaylistConverter
+import com.example.playlistmaker.ui.media.model.PlaylistDetails
 import com.example.playlistmaker.ui.search.mapper.TimeFormatter.formatTime
 import com.example.playlistmaker.ui.search.mapper.TrackDetailsInfoMapper
 import com.example.playlistmaker.ui.search.model.TrackDetailsInfo
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class AudioPlayerViewModel(
     private val track: TrackDetailsInfo,
     private val playerInteractor: MediaPlayerInteractor,
-    private val favoriteTracksInteractor: FavoriteTracksInteractor
+    private val favoriteTracksInteractor: FavoriteTracksInteractor,
+    private val getAllPlaylistsUseCase: GetAllPlaylistsUseCase,
+    private val addTrackToPlaylistUseCase: AddTrackToPlaylistUseCase
 ) : ViewModel() {
-    private val playerState = createPlayerState()
+    private val playerState = PlayerState(
+        MediaPlayerState.STATE_DEFAULT,
+        DEFAULT_TIMER_VALUE,
+        track.isFavorite
+    )
 
     private val playerStateLiveData = MutableLiveData(playerState)
     fun observePlayerState(): LiveData<PlayerState> = playerStateLiveData
+
+    private val playlistsLiveData = MutableLiveData<List<PlaylistDetails>>()
+    fun observePlaylists(): LiveData<List<PlaylistDetails>> = playlistsLiveData
+
+    private val isTrackAddedToPlaylist = MutableLiveData<AddedToPlaylistState>()
+    fun observeIsTrackAdded(): LiveData<AddedToPlaylistState> = isTrackAddedToPlaylist
 
     private var timerJob: Job? = null
 
@@ -39,7 +57,21 @@ class AudioPlayerViewModel(
                 resetTimer()
             })
 
-        isFavorite()
+        checkIsFavorite()
+        loadPlaylists()
+    }
+
+    fun addTrackToPlaylist(playlistId: Long, playlistName: String) {
+        viewModelScope.launch {
+            val isAdded = addTrackToPlaylistUseCase.execute(playlistId, track.id).first()
+
+            isTrackAddedToPlaylist.postValue(
+                AddedToPlaylistState(
+                    playlistName,
+                    isAdded
+                )
+            )
+        }
     }
 
     fun changeLikeState() {
@@ -74,15 +106,18 @@ class AudioPlayerViewModel(
         playerInteractor.release()
     }
 
-    private fun createPlayerState(): PlayerState {
-        return PlayerState(
-            MediaPlayerState.STATE_DEFAULT,
-            DEFAULT_TIMER_VALUE,
-            track.isFavorite
-        )
+    fun loadPlaylists() {
+        viewModelScope.launch {
+            getAllPlaylistsUseCase.execute().collect {
+                val playlistDetails = it.map { playlist ->
+                    PlaylistConverter.convertToDetails(playlist)
+                }
+                playlistsLiveData.postValue(playlistDetails)
+            }
+        }
     }
 
-    private fun isFavorite() {
+    private fun checkIsFavorite() {
         if (track.isFavorite) {
             return
         }

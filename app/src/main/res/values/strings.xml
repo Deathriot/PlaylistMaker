@@ -2,6 +2,7 @@
 
 <resources>
     <string name="app_name" translatable="false">Playlist Maker</string>
+    <string name="default_timer_value" translatable="false">0:00</string>
 
     <!-- Главный экран -->
     <string name="search_btn" translatable="false">Поиск</string>
@@ -35,7 +36,12 @@
     <string name="player_year" translatable="false">Год</string>
     <string name="player_genre" translatable="false">Жанр</string>
     <string name="player_country" translatable="false">Страна</string>
-    <string name="default_timer_value" translatable="false">0:00</string>
+
+    <string name="player_bottom_sheet_add_playlist" translatable="false">Добавить в плейлист</string>
+    <string name="player_bottom_sheet_new_playlist_btn" translatable="false">Новый плейлист</string>
+
+    <string name="player_added_to_playlist" translatable="false">Добавлено в плейлист %s</string>
+    <string name="player_already_added_to_playlist" translatable="false">Трек уже добавлен в плейлист %s</string>
 
     <!-- Медиатека -->
     <string name="media_title" translatable="false">Медиатека</string>
@@ -45,4 +51,16 @@
     <string name="media_is_empty" translatable="false">Ваша медиатека пуста</string>
     <string name="media_new_playlist" translatable="false">Новый плейлист</string>
 
+    <!-- Создание нового плейлиста -->
+    <string name="new_playlist" translatable="false">Новый плейлист</string>
+    <string name="new_playlist_name" translatable="false">Название*</string>
+    <string name="new_playlist_description" translatable="false">Описание</string>
+    <string name="new_playlist_create" translatable="false">Создать</string>
+
+    <string name="new_playlist_toast_text" translatable="false">Плейлист %s создан</string>
+
+    <string name="new_playlist_dialog_title" translatable="false">Завершить создание плейлиста?</string>
+    <string name="new_playlist_dialog_message" translatable="false">Все несохраненные данные будут потеряны</string>
+    <string name="new_playlist_dialog_cancel_btn" translatable="false">Отмена</string>
+    <string name="new_playlist_dialog_confirm_exit_btn" translatable="false">Завершить</string>
 </resources>
