@@ -19,5 +19,7 @@ data class Track (
 
     val country: String,
 
-    val musicUrl : String
+    val musicUrl : String,
+
+    val isFavorite: Boolean
 )

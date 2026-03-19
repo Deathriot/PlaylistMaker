@@ -15,7 +15,8 @@ object TrackMapper {
             primaryGenreName = trackDto.primaryGenreName,
             country = trackDto.country,
             musicUrl = trackDto.musicUrl!!,
-            timeMillis = trackDto.timeMillis
+            timeMillis = trackDto.timeMillis,
+            isFavorite = false
         )
     }
 }

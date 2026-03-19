@@ -125,7 +125,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:src="@drawable/ic_audio_player_like_btn_51"
+        android:src="@drawable/ic_audio_player_inactive_like_btn_51"
 
         app:layout_constraintBottom_toBottomOf="@id/player_play_btn"
         app:layout_constraintEnd_toStartOf="@id/right_border"

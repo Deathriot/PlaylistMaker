@@ -34,7 +34,7 @@ class AudioPlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         currentTrack = requireArguments().getParcelable(ARGS_TRACKS, TrackDetailsInfo::class.java)!!
-        viewModel = getViewModel(parameters = { parametersOf(currentTrack.musicUrl) })
+        viewModel = getViewModel(parameters = { parametersOf(currentTrack) })
         viewModel.prepare()
         setViewModelObservers()
         initClickListeners()
@@ -42,28 +42,42 @@ class AudioPlayerFragment : Fragment() {
     }
 
     private fun setViewModelObservers() {
-        viewModel.observeTimer().observe(viewLifecycleOwner) {
-            binding.playerTrackCurrentTime.text = it
-        }
-
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
-            when (it) {
-                MediaPlayerState.STATE_DEFAULT -> {
-                    binding.playerPlayBtn.isEnabled = false
-                }
+            onMediaState(it.mediaState)
+            onTimer(it.timer)
+            onLike(it.isLiked)
+        }
+    }
 
-                MediaPlayerState.STATE_PREPARED -> {
-                    binding.playerPlayBtn.isEnabled = true
-                    binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_play_btn_83)
-                }
+    private fun onLike(isLiked: Boolean) {
+        if (isLiked) {
+            binding.playerLikeBtn.setImageResource(R.drawable.ic_audio_player_active_like_btn_51)
+        } else {
+            binding.playerLikeBtn.setImageResource(R.drawable.ic_audio_player_inactive_like_btn_51)
+        }
+    }
 
-                MediaPlayerState.STATE_PLAYING -> {
-                    binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_pause_btn_83)
-                }
+    private fun onTimer(timer: String) {
+        binding.playerTrackCurrentTime.text = timer
+    }
 
-                MediaPlayerState.STATE_PAUSED -> {
-                    binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_play_btn_83)
-                }
+    private fun onMediaState(mediaState: MediaPlayerState) {
+        when (mediaState) {
+            MediaPlayerState.STATE_DEFAULT -> {
+                binding.playerPlayBtn.isEnabled = false
+            }
+
+            MediaPlayerState.STATE_PREPARED -> {
+                binding.playerPlayBtn.isEnabled = true
+                binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_play_btn_83)
+            }
+
+            MediaPlayerState.STATE_PLAYING -> {
+                binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_pause_btn_83)
+            }
+
+            MediaPlayerState.STATE_PAUSED -> {
+                binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_play_btn_83)
             }
         }
     }
@@ -125,6 +139,9 @@ class AudioPlayerFragment : Fragment() {
             playerPlayBtn.setOnClickListener {
                 viewModel.changeState()
             }
+            playerLikeBtn.setOnClickListener {
+                viewModel.changeLikeState()
+            }
         }
     }
 
@@ -142,14 +159,14 @@ class AudioPlayerFragment : Fragment() {
         viewModel.pause()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
-
     override fun onStop() {
         super.onStop()
         viewModel.release()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     companion object {
