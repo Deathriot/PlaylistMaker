@@ -129,7 +129,7 @@ class AudioPlayerFragment : Fragment() {
     }
 
     private fun setUI() {
-        binding.apply {
+        with(binding) {
             setImage(currentTrack.artworkUrl512)
             playerTrackTitle.text = currentTrack.title
             playerTrackArtist.text = currentTrack.artistName
@@ -152,7 +152,7 @@ class AudioPlayerFragment : Fragment() {
     }
 
     private fun setReleaseDate() {
-        binding.apply {
+        with(binding) {
             if (currentTrack.releaseDate != null) {
                 playerReleaseYear.text = currentTrack.releaseDate
                 playerReleaseYear.isVisible = true
@@ -165,7 +165,7 @@ class AudioPlayerFragment : Fragment() {
     }
 
     private fun setCollectionName() {
-        binding.apply {
+        with(binding) {
             if (currentTrack.collectionName != null) {
                 playerTrackCollection.text = currentTrack.collectionName
                 playerTrackCollection.isVisible = true
@@ -178,7 +178,7 @@ class AudioPlayerFragment : Fragment() {
     }
 
     private fun initClickListeners() {
-        binding.apply {
+        with(binding) {
             playerBackButton.setOnClickListener {
                 findNavController().navigateUp()
             }

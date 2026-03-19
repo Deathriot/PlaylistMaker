@@ -20,14 +20,14 @@ class TrackViewHolder(
     }
 
     fun bind(track: TrackInfo) {
-        Glide.with(binding.root)
-            .load(track.artworkUrl100)
-            .placeholder(R.drawable.ic_placeholder_45)
-            .centerCrop()
-            .transform(RoundedCorners(dpToPx(CORNER_RADIUS, binding.root.context)))
-            .into(binding.trackImage)
+        with(binding) {
+            Glide.with(root)
+                .load(track.artworkUrl100)
+                .placeholder(R.drawable.ic_placeholder_45)
+                .centerCrop()
+                .transform(RoundedCorners(dpToPx(CORNER_RADIUS, root.context)))
+                .into(trackImage)
 
-        binding.apply {
             trackTitle.text = track.title
             trackArtistName.text = track.artistName
             trackTime.text = track.time

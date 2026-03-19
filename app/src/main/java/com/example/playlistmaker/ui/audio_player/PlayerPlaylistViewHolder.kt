@@ -22,7 +22,7 @@ class PlayerPlaylistViewHolder(
     }
 
     fun bind(playlist: PlaylistDetails) {
-        binding.apply {
+        with(binding) {
             playlistBottomSheetTitle.text = playlist.name
             val trackCount = playlist.trackCount
 

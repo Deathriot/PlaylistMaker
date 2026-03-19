@@ -52,7 +52,7 @@ class NewPlaylistFragment : Fragment() {
         }
 
         newPlaylistViewModel.observePlaylistSaved().observe(viewLifecycleOwner) {
-            val text = getString(R.string.new_playlist_toast_text, nameEditText.text.toString())
+            val text = getString(R.string.new_playlist_toast_text, nameEditText.text.toString().trim())
             Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()
         }
@@ -77,8 +77,8 @@ class NewPlaylistFragment : Fragment() {
 
         binding.newPlaylistCreateBtn.setOnClickListener {
             newPlaylistViewModel.savePlaylist(
-                nameEditText.text.toString(),
-                binding.newPlaylistDescription.text.toString()
+                nameEditText.text.toString().trim(),
+                binding.newPlaylistDescription.text.toString().trim()
             )
         }
     }
@@ -95,7 +95,7 @@ class NewPlaylistFragment : Fragment() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.newPlaylistCreateBtn.isEnabled = !s.isNullOrEmpty()
+                binding.newPlaylistCreateBtn.isEnabled = !s.isNullOrBlank()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -110,8 +110,8 @@ class NewPlaylistFragment : Fragment() {
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 newPlaylistViewModel.checkShouldShowDialog(
-                    nameEditText.text.toString(),
-                    binding.newPlaylistDescription.text.toString()
+                    nameEditText.text.toString().trim(),
+                    binding.newPlaylistDescription.text.toString().trim()
                 )
             }
         }
