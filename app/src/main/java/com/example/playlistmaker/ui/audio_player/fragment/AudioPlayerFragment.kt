@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -15,17 +17,24 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
 import com.example.playlistmaker.domain.player.model.MediaPlayerState
+import com.example.playlistmaker.ui.audio_player.PlayerPlaylistAdapter
 import com.example.playlistmaker.ui.audio_player.viewmodel.AudioPlayerViewModel
+import com.example.playlistmaker.ui.media.model.PlaylistDetails
 import com.example.playlistmaker.ui.search.model.TrackDetailsInfo
 import com.example.playlistmaker.ui.util.dpToPx
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
+import kotlin.math.abs
 
 class AudioPlayerFragment : Fragment() {
 
     private lateinit var currentTrack: TrackDetailsInfo
     private lateinit var viewModel: AudioPlayerViewModel
-
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var bottomSheetCallback: BottomSheetCallback
+    private lateinit var adapter: PlayerPlaylistAdapter
 
     private var _binding: FragmentAudioPlayerBinding? = null
     private val binding get() = _binding!!
@@ -36,17 +45,54 @@ class AudioPlayerFragment : Fragment() {
         currentTrack = requireArguments().getParcelable(ARGS_TRACKS, TrackDetailsInfo::class.java)!!
         viewModel = getViewModel(parameters = { parametersOf(currentTrack) })
         viewModel.prepare()
-        setViewModelObservers()
+
+        setBottomSheet()
+        initAdapter()
+        setObservers()
         initClickListeners()
         setUI()
     }
 
-    private fun setViewModelObservers() {
+    private fun setObservers() {
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
             onMediaState(it.mediaState)
             onTimer(it.timer)
             onLike(it.isLiked)
         }
+
+        viewModel.observePlaylists().observe(viewLifecycleOwner) {
+            render(it)
+        }
+
+        viewModel.observeIsTrackAdded().observe(viewLifecycleOwner) {
+            if (it.isAdded) {
+                viewModel.loadPlaylists()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.player_added_to_playlist, it.name),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.player_already_added_to_playlist, it.name),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun initAdapter() {
+        adapter = PlayerPlaylistAdapter(this::onPlaylistClick)
+        binding.playerBottomSheetRecycleView.adapter = adapter
+    }
+
+    private fun onPlaylistClick(playlistId: Long, playlistName: String) {
+        viewModel.addTrackToPlaylist(playlistId, playlistName)
+    }
+
+    private fun render(playlists: List<PlaylistDetails>) {
+        adapter.setContent(playlists)
     }
 
     private fun onLike(isLiked: Boolean) {
@@ -136,11 +182,61 @@ class AudioPlayerFragment : Fragment() {
             playerBackButton.setOnClickListener {
                 findNavController().navigateUp()
             }
+
             playerPlayBtn.setOnClickListener {
                 viewModel.changeState()
             }
+
             playerLikeBtn.setOnClickListener {
                 viewModel.changeLikeState()
+            }
+
+            playerAddPlaylistBtn.setOnClickListener {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+            playerBottomSheetAddPlaylist.setOnClickListener {
+                findNavController().navigate(R.id.action_audioPlayerFragment_to_newPlaylistFragment)
+            }
+        }
+    }
+
+    private fun setBottomSheet() {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+            bottomSheetCallback = object : BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            binding.playerOverlay.isVisible = false
+                        }
+
+                        else -> {
+                            binding.playerOverlay.isVisible = true
+                        }
+                    }
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                    calculateOverlayAlpha(slideOffset)
+                }
+            }
+            addBottomSheetCallback(bottomSheetCallback)
+        }
+    }
+
+    private fun calculateOverlayAlpha(slideOffset: Float) {
+        // Такие сложности сделаны для того чтобы и дальше постепенно затемнять экран и во время того как
+        // тянем BottomSheet из collapsed к expanded, при этом сохраняя дизайн в тз
+        when {
+            slideOffset >= 0 -> {
+                val alpha = 0.6 + slideOffset * 0.4
+                binding.playerOverlay.alpha = alpha.toFloat()
+            }
+
+            else -> {
+                val alpha = (1 - abs(slideOffset)) * 0.6
+                binding.playerOverlay.alpha = alpha.toFloat()
             }
         }
     }
@@ -161,11 +257,13 @@ class AudioPlayerFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        viewModel.release()
+        viewModel.pause()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        viewModel.release()
+        bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
         _binding = null
     }
 

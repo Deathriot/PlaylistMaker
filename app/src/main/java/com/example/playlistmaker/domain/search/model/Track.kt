@@ -1,6 +1,6 @@
 package com.example.playlistmaker.domain.search.model
 
-data class Track (
+data class Track(
     val id: Long,
 
     val title: String,
@@ -19,7 +19,7 @@ data class Track (
 
     val country: String,
 
-    val musicUrl : String,
+    val musicUrl: String,
 
     val isFavorite: Boolean
 )

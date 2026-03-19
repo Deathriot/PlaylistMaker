@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:backgroundTint="?attr/colorOnSecondary">
+
+    <ImageView
+        android:id="@+id/playlist_cover"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_placeholder_45" />
+
+    <TextView
+        android:id="@+id/playlist_name"
+        style="@style/Bottom_navigation_text_style"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="?attr/colorOnSecondary"
+
+        android:layout_marginTop="@dimen/padding_3"
+        app:layout_constraintEnd_toEndOf="@id/playlist_cover"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playlist_cover"
+
+        tools:text="Крутой альбом" />
+
+    <TextView
+        android:id="@+id/playlist_track_count"
+        android:layout_marginTop="@dimen/padding_1"
+        style="@style/Bottom_navigation_text_style"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textColor="?attr/colorOnSecondary"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playlist_name"
+
+        tools:text="12 треков" />
+</androidx.constraintlayout.widget.ConstraintLayout>

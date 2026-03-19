@@ -1,5 +1,11 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.domain.media.GetAllPlaylistsUseCase
+import com.example.playlistmaker.domain.media.impl.GetAllPlaylistsUseCaseImpl
+import com.example.playlistmaker.domain.new_playlist.SavePlaylistUseCase
+import com.example.playlistmaker.domain.new_playlist.impl.SavePlaylistUseCaseImpl
+import com.example.playlistmaker.domain.player.AddTrackToPlaylistUseCase
+import com.example.playlistmaker.domain.player.impl.AddTrackToPlaylistUseCaseImpl
 import com.example.playlistmaker.domain.search.GetTracksUseCase
 import com.example.playlistmaker.domain.search.impl.GetTracksUseCaseImpl
 import com.example.playlistmaker.domain.settings.GetDarkThemeUseCase
@@ -19,5 +25,17 @@ val useCaseModule = module {
 
     single<SetDarkThemeUseCase> {
         SetDarkThemeUseCaseImpl(get(), get())
+    }
+
+    single<SavePlaylistUseCase> {
+        SavePlaylistUseCaseImpl(get(), get())
+    }
+
+    single<GetAllPlaylistsUseCase> {
+        GetAllPlaylistsUseCaseImpl(get())
+    }
+
+    single<AddTrackToPlaylistUseCase> {
+        AddTrackToPlaylistUseCaseImpl(get())
     }
 }

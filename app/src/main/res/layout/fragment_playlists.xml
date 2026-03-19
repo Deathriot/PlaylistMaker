@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/media_playlists"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/media_playlists"
     tools:context=".ui.media.fragment.PlaylistsFragment">
 
     <Button
+        android:id="@+id/playlists_add_new_playlist_btn"
         style="@style/Search_functional_button"
         android:layout_width="wrap_content"
 
@@ -22,13 +22,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Group
-        android:id="@+id/fav_tracks_placeholder"
+        android:id="@+id/playlists_placeholder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="fav_tracks_placeholder_text, fav_tracks_placeholder_image" />
+        android:visibility="gone"
+        app:constraint_referenced_ids="playlists_placeholder_text, playlists_placeholder_image" />
 
     <ImageView
-        android:id="@+id/fav_tracks_placeholder_image"
+        android:id="@+id/playlists_placeholder_image"
 
         android:layout_width="120dp"
         android:layout_height="120dp"
@@ -43,7 +44,7 @@
         app:layout_constraintVertical_bias="0.2" />
 
     <TextView
-        android:id="@+id/fav_tracks_placeholder_text"
+        android:id="@+id/playlists_placeholder_text"
 
         style="@style/Search_placeholder_text_style"
         android:layout_width="wrap_content"
@@ -57,5 +58,21 @@
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fav_tracks_placeholder_image" />
+        app:layout_constraintTop_toBottomOf="@id/playlists_placeholder_image" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlists_recycle_view"
+        android:layout_marginTop="@dimen/normal_padding"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/playlists_add_new_playlist_btn"
+
+        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:listitem="@layout/playlist"
+        tools:spanCount="2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

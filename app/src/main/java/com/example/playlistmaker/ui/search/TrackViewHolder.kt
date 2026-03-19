@@ -15,7 +15,7 @@ class TrackViewHolder(
 
     init {
         binding.root.setOnClickListener {
-            onClick(adapterPosition)
+            onClick(absoluteAdapterPosition)
         }
     }
 

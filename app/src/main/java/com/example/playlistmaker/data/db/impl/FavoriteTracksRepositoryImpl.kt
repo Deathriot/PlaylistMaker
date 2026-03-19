@@ -1,12 +1,11 @@
 package com.example.playlistmaker.data.db.impl
 
-import com.example.playlistmaker.data.db.converter.TrackEntityConvertor
+import com.example.playlistmaker.data.db.converter.FavoriteTrackEntityConvertor
 import com.example.playlistmaker.data.db.database.PlayListMakerRoomDatabase
 import com.example.playlistmaker.domain.db.FavoriteTracksRepository
 import com.example.playlistmaker.domain.search.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -17,13 +16,13 @@ class FavoriteTracksRepositoryImpl(
 
     override suspend fun addTrack(track: Track) {
         withContext(Dispatchers.IO) {
-            database.getFavoriteTracksDao().insertTrack(TrackEntityConvertor.convertToEntity(track))
+            database.getFavoriteTracksDao().insertTrack(FavoriteTrackEntityConvertor.convertToEntity(track))
         }
     }
 
     override suspend fun deleteTrack(track: Track) {
         withContext(Dispatchers.IO) {
-            database.getFavoriteTracksDao().deleteTrack(TrackEntityConvertor.convertToEntity(track))
+            database.getFavoriteTracksDao().deleteTrack(FavoriteTrackEntityConvertor.convertToEntity(track))
         }
     }
 
@@ -32,7 +31,7 @@ class FavoriteTracksRepositoryImpl(
             .getAllTracks()
             .map {
                 it.map { trackEntity ->
-                    TrackEntityConvertor.convertToTrack(trackEntity)
+                    FavoriteTrackEntityConvertor.convertToTrack(trackEntity)
                 }
             }.flowOn(Dispatchers.IO)
     }
@@ -51,7 +50,7 @@ class FavoriteTracksRepositoryImpl(
                 if (it == null) {
                     null
                 } else {
-                    TrackEntityConvertor.convertToTrack(it)
+                    FavoriteTrackEntityConvertor.convertToTrack(it)
                 }
             }.flowOn(Dispatchers.IO)
     }

@@ -45,7 +45,7 @@ class SearchViewModel(
         inputValue.postValue(EditTextState())
     }
 
-    fun search(text: String?) {
+    private fun search(text: String?) {
         if (text.isNullOrEmpty()) {
             return
         }
