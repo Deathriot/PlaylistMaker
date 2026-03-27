@@ -11,10 +11,17 @@ import com.example.playlistmaker.ui.media.model.PlaylistDetails
 import com.example.playlistmaker.ui.util.dpToPx
 
 class PlaylistViewHolder(
-    private val binding: PlaylistBinding
+    private val binding: PlaylistBinding,
+    onClick: (position: Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
+    init {
+        binding.root.setOnClickListener {
+            onClick(absoluteAdapterPosition)
+        }
+    }
+
     fun bind(playlist: PlaylistDetails) {
-        binding.apply {
+        with(binding) {
             playlistName.text = playlist.name
             val trackCount = playlist.trackCount
 

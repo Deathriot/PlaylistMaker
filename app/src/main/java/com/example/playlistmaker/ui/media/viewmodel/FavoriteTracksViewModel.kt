@@ -50,7 +50,7 @@ class FavoriteTracksViewModel(
                 if (tracks.isEmpty()) {
                     state.postValue(State.Empty("Избранных треков нет"))
                 } else {
-                    val tracksInfo = tracks.map { TrackInfoMapper.map(it) }
+                    val tracksInfo = tracks.map { TrackInfoMapper.mapToInfo(it) }
                     state.postValue(State.Content(tracksInfo))
                 }
             }

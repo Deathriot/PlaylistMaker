@@ -1,13 +1,17 @@
 package com.example.playlistmaker.domain.player.impl
 
-import com.example.playlistmaker.domain.db.PlaylistRepository
+import com.example.playlistmaker.domain.db.repository.PlaylistRepository
+import com.example.playlistmaker.domain.db.repository.PlaylistTrackRepository
 import com.example.playlistmaker.domain.player.AddTrackToPlaylistUseCase
+import com.example.playlistmaker.domain.search.model.Track
 import kotlinx.coroutines.flow.Flow
 
 class AddTrackToPlaylistUseCaseImpl(
-    private val playlistRepository: PlaylistRepository
+    private val playlistRepository: PlaylistRepository,
+    private val playlistTrackRepository: PlaylistTrackRepository
 ) : AddTrackToPlaylistUseCase {
-    override fun execute(playlistId: Long, trackId: Long): Flow<Boolean> {
-        return playlistRepository.addTrackToPlaylist(trackId, playlistId)
+    override suspend fun execute(playlistId: Long, track: Track): Flow<Boolean> {
+        playlistTrackRepository.insertTrack(track)
+        return playlistRepository.addTrackToPlaylist(track.id, playlistId)
     }
 }

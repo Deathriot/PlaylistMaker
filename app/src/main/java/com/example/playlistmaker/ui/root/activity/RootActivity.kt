@@ -36,7 +36,7 @@ class RootActivity : AppCompatActivity() {
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.audioPlayerFragment, R.id.newPlaylistFragment -> {
+                R.id.audioPlayerFragment, R.id.newPlaylistFragment, R.id.playlistFragment -> {
                     hideBottomNavigationView()
                 }
 

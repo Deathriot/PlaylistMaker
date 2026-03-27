@@ -20,7 +20,7 @@ class SettingsInteractorImpl(
     }
 
     override fun shareApp(url: String, title : String) {
-        navigator.shareLink(url, title)
+        navigator.share(url, title)
     }
 
     override fun setDarkTheme(isDark: Boolean) {

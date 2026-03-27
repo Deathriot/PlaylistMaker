@@ -330,15 +330,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/minor_padding"
-            android:src="@drawable/audio_player_bottom_sheet_top_decoration"/>
+            android:src="@drawable/audio_player_bottom_sheet_top_decoration" />
 
         <TextView
             android:id="@+id/player_bottom_sheet_title"
             style="@style/Player_bottom_sheet_title_text_style"
-            android:layout_marginVertical="@dimen/big_padding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginVertical="@dimen/big_padding"
             android:text="@string/player_bottom_sheet_add_playlist"
             android:textColor="?attr/colorOnSecondary" />
 
@@ -363,6 +363,7 @@
             android:layout_marginHorizontal="@dimen/normal_padding"
             android:layout_marginTop="@dimen/normal_padding"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="5"
             tools:listitem="@layout/player_playlist_bottom_sheet" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -2,28 +2,25 @@ package com.example.playlistmaker.data.db.impl
 
 import com.example.playlistmaker.data.db.converter.FavoriteTrackEntityConvertor
 import com.example.playlistmaker.data.db.database.PlayListMakerRoomDatabase
-import com.example.playlistmaker.domain.db.FavoriteTracksRepository
+import com.example.playlistmaker.domain.db.repository.FavoriteTracksRepository
 import com.example.playlistmaker.domain.search.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 
 class FavoriteTracksRepositoryImpl(
     private val database: PlayListMakerRoomDatabase
 ) : FavoriteTracksRepository {
 
     override suspend fun addTrack(track: Track) {
-        withContext(Dispatchers.IO) {
-            database.getFavoriteTracksDao().insertTrack(FavoriteTrackEntityConvertor.convertToEntity(track))
-        }
+        database.getFavoriteTracksDao()
+            .insertTrack(FavoriteTrackEntityConvertor.convertToEntity(track))
     }
 
     override suspend fun deleteTrack(track: Track) {
-        withContext(Dispatchers.IO) {
-            database.getFavoriteTracksDao().deleteTrack(FavoriteTrackEntityConvertor.convertToEntity(track))
-        }
+        database.getFavoriteTracksDao()
+            .deleteTrack(FavoriteTrackEntityConvertor.convertToEntity(track))
     }
 
     override fun getAllTracks(): Flow<List<Track>> {

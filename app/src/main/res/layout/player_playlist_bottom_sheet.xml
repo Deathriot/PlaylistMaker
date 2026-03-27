@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/mini_padding"
         android:layout_marginTop="@dimen/mini_padding"
+        android:textColor="?attr/colorOnSecondary"
         app:layout_constraintStart_toEndOf="@id/playlist_bottom_sheet_cover"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Крутые песни" />
@@ -30,6 +31,7 @@
         style="@style/Mini_regular_text_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/gray_to_white"
         app:layout_constraintStart_toStartOf="@id/playlist_bottom_sheet_title"
         app:layout_constraintTop_toBottomOf="@id/playlist_bottom_sheet_title"
         tools:text="23 трека" />

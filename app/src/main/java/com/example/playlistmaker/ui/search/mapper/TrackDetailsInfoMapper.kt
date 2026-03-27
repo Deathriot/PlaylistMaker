@@ -24,7 +24,7 @@ object TrackDetailsInfoMapper {
         )
     }
 
-    fun mapFromFavoriteTrackToTrackDetailsInfo(track:Track) : TrackDetailsInfo{
+    fun mapFromFavoriteTrackToTrackDetailsInfo(track: Track): TrackDetailsInfo {
         return TrackDetailsInfo(
             id = track.id,
             title = track.title,
@@ -74,7 +74,18 @@ object TrackDetailsInfoMapper {
             return null
         }
 
-        println(releaseDate)
+        // Костыль для передачи даты (Все треки, которые передаются не через айтюнс имеют в дате лишь год)
+        // буду рад узнать как бы сделать правильно
+        if (releaseDate.length == 4) {
+            val checkIsYear = releaseDate.toIntOrNull()
+
+            if (checkIsYear == null) {
+                throw IllegalArgumentException("В дату трека передан бред: $releaseDate")
+            } else {
+                return releaseDate
+            }
+        }
+
         val year = ZonedDateTime.parse(releaseDate).year
         return year.toString()
     }

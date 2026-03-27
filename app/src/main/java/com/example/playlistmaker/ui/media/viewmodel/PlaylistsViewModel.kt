@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.media.GetAllPlaylistsUseCase
 import com.example.playlistmaker.ui.media.converter.PlaylistConverter
 import com.example.playlistmaker.ui.media.model.PlaylistDetails
+import com.example.playlistmaker.ui.model.SingleLiveEvent
 import kotlinx.coroutines.launch
 
 class PlaylistsViewModel(
@@ -19,6 +20,9 @@ class PlaylistsViewModel(
     private val playlists = MutableLiveData<List<PlaylistDetails>>()
     fun observePlaylists(): LiveData<List<PlaylistDetails>> = playlists
 
+    private val clickedPlaylist = SingleLiveEvent<Long>()
+    fun observeClickedPlaylist(): LiveData<Long> = clickedPlaylist
+
     fun loadPlaylists() {
         viewModelScope.launch {
             getAllPlaylistsUseCase.execute().collect {
@@ -27,13 +31,11 @@ class PlaylistsViewModel(
                 }
 
                 playlists.postValue(playlistsDto)
-                test()
             }
         }
     }
 
-    fun test() {
-        println("ViewModel!")
-        println(playlists.value?.size)
+    fun onPlaylistClick(playlistId: Long) {
+        clickedPlaylist.postValue(playlistId)
     }
 }

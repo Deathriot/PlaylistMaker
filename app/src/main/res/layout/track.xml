@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:paddingVertical="@dimen/mini_padding"
     android:orientation="horizontal"
-    android:backgroundTint="?attr/colorOnSecondary">
+    android:backgroundTint="?attr/colorOnSecondary"
+    android:background="?attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/track_image"
@@ -40,7 +41,7 @@
             <TextView
                 android:id="@+id/track_artist_name"
                 style="@style/Mini_regular_text_style"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray_to_white"

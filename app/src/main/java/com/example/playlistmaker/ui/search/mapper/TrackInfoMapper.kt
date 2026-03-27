@@ -5,7 +5,7 @@ import com.example.playlistmaker.ui.search.mapper.TimeFormatter.formatTime
 import com.example.playlistmaker.ui.search.model.TrackInfo
 
 object TrackInfoMapper {
-    fun map(track: Track): TrackInfo {
+    fun mapToInfo(track: Track): TrackInfo {
         return TrackInfo(
             id = track.id,
             title = track.title,

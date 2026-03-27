@@ -14,6 +14,7 @@ import com.example.playlistmaker.ui.media.viewmodel.PlaylistsViewModel
 import com.example.playlistmaker.ui.media.PlaylistAdapter
 import com.example.playlistmaker.ui.media.model.PlaylistDetails
 import com.example.playlistmaker.ui.media.item_decoration.PlaylistItemDecoration
+import com.example.playlistmaker.ui.playlist.fragment.PlaylistFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
@@ -44,6 +45,13 @@ class PlaylistsFragment : Fragment() {
         playlistsViewModel.observePlaylists().observe(viewLifecycleOwner) {
             render(it)
         }
+
+        playlistsViewModel.observeClickedPlaylist().observe(viewLifecycleOwner) {
+            findNavController().navigate(
+                R.id.action_mediaFragment_to_playlistFragment,
+                PlaylistFragment.createArgs(it)
+            )
+        }
     }
 
     private fun render(playlists: List<PlaylistDetails>) {
@@ -73,12 +81,16 @@ class PlaylistsFragment : Fragment() {
     private fun initAdapter() {
         val spacing = resources.getDimensionPixelSize(R.dimen.normal_padding)
         val decoration = PlaylistItemDecoration(spacing)
-        adapter = PlaylistAdapter()
+        adapter = PlaylistAdapter(this::onPlaylistClick)
         binding.playlistsRecycleView.apply {
             this.layoutManager = GridLayoutManager(requireContext(), 2)
             addItemDecoration(decoration)
             this.adapter = this@PlaylistsFragment.adapter
         }
+    }
+
+    private fun onPlaylistClick(playlistId: Long) {
+        playlistsViewModel.onPlaylistClick(playlistId)
     }
 
     override fun onCreateView(
@@ -94,6 +106,7 @@ class PlaylistsFragment : Fragment() {
         super.onResume()
         playlistsViewModel.loadPlaylists()
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

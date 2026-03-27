@@ -5,15 +5,15 @@ import com.example.playlistmaker.data.db.model.PlaylistEntity
 import com.example.playlistmaker.domain.new_playlist.model.Playlist
 
 object PlaylistEntityConvertor {
-    fun convertToPlaylist(playlistEntity: PlaylistEntity): Playlist {
-        return Playlist(
+    fun convertToPlaylist(playlistEntity: PlaylistEntity?): Playlist? {
+        return if (playlistEntity != null) Playlist(
             id = playlistEntity.id,
             name = playlistEntity.name,
             description = playlistEntity.description,
             tracksIds = playlistEntity.tracksIds,
             coverUri = playlistEntity.coverUri?.toUri(),
             trackCount = playlistEntity.trackCount
-        )
+        ) else return null
     }
 
     fun convertToEntity(playlist: Playlist): PlaylistEntity {

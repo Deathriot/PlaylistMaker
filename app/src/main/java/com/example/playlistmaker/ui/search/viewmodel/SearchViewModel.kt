@@ -110,13 +110,13 @@ class SearchViewModel(
                 return
             }
 
-            val tracksInfo = tracks.map { TrackInfoMapper.map(it) }
+            val tracksInfo = tracks.map { TrackInfoMapper.mapToInfo(it) }
             searchState.postValue(State.Content(tracksInfo))
         }
     }
 
     private fun getHistoryTracks(): List<TrackInfo> {
-        return historyInteractor.getAllTracks().map { TrackInfoMapper.map(it) }
+        return historyInteractor.getAllTracks().map { TrackInfoMapper.mapToInfo(it) }
     }
 
     fun clearHistory() {

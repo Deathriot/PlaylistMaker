@@ -4,6 +4,7 @@ import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 
 interface FileStorageClient {
-    fun createFile(fileName: String, content: Uri): Flow<Uri>
+    fun createFile(content: Uri): Flow<Uri>
     fun getData(fileName: String): Flow<Uri?>
+    suspend fun deleteFile(filePath: Uri?)
 }

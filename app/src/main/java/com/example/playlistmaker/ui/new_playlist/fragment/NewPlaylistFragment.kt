@@ -27,11 +27,11 @@ import com.example.playlistmaker.ui.util.dpToPx
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class NewPlaylistFragment : Fragment() {
+open class NewPlaylistFragment : Fragment() {
     private var _binding: FragmentCreateNewPlaylistBinding? = null
-    private val binding get() = _binding!!
+    protected val binding get() = _binding!!
 
-    private val newPlaylistViewModel: NewPlaylistViewModel by viewModel()
+    protected open val newPlaylistViewModel: NewPlaylistViewModel by viewModel()
 
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
     private lateinit var nameTextWatcher: TextWatcher
@@ -46,13 +46,14 @@ class NewPlaylistFragment : Fragment() {
         setObservers()
     }
 
-    private fun setObservers() {
+    protected open fun setObservers() {
         newPlaylistViewModel.observeCurrentTrackCover().observe(viewLifecycleOwner) {
             setTrackCover(it)
         }
 
         newPlaylistViewModel.observePlaylistSaved().observe(viewLifecycleOwner) {
-            val text = getString(R.string.new_playlist_toast_text, nameEditText.text.toString().trim())
+            val text =
+                getString(R.string.new_playlist_toast_text, nameEditText.text.toString().trim())
             Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()
         }
@@ -106,7 +107,7 @@ class NewPlaylistFragment : Fragment() {
         nameEditText.addTextChangedListener(nameTextWatcher)
     }
 
-    private fun setOnBackPressed() {
+    protected open fun setOnBackPressed() {
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 newPlaylistViewModel.checkShouldShowDialog(
@@ -134,14 +135,15 @@ class NewPlaylistFragment : Fragment() {
             .show()
     }
 
-    private fun setTrackCover(uri: Uri) {
+    protected fun setTrackCover(uri: Uri?) {
         binding.newPlaylistPlaceHolder.isVisible = false
         Glide.with(this)
             .load(uri)
+            .placeholder(R.drawable.ic_placeholder_45)
             .transform(
                 MultiTransformation(
                     CenterCrop(),
-                    RoundedCorners(dpToPx(CORNER_RADIUS, requireContext()))
+                    RoundedCorners(dpToPx(NEW_PLAYLIST_CORNER_RADIUS, requireContext()))
                 )
             )
             .into(binding.newPlaylistTrackCover)
@@ -163,6 +165,6 @@ class NewPlaylistFragment : Fragment() {
     }
 
     companion object {
-        const val CORNER_RADIUS = 8f
+        private const val NEW_PLAYLIST_CORNER_RADIUS = 8f
     }
 }

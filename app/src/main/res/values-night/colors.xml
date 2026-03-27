@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="vector_color">@color/black</color>
-    <color name="light_gray">@color/white</color>
+    <color name="light_gray_to_white">@color/white</color>
     <color name="gray_to_white">@color/white</color>
 </resources>

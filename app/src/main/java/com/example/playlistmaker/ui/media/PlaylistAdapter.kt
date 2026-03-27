@@ -2,11 +2,14 @@ package com.example.playlistmaker.ui.media
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.playlistmaker.databinding.PlaylistBinding
 import com.example.playlistmaker.ui.media.model.PlaylistDetails
 
-class PlaylistAdapter : Adapter<PlaylistViewHolder>() {
+class PlaylistAdapter(
+    private val onClick: (playlistId: Long) -> Unit
+) : Adapter<PlaylistViewHolder>() {
     private var playlists = ArrayList<PlaylistDetails>()
 
     fun setContent(playlists: List<PlaylistDetails>) {
@@ -18,7 +21,13 @@ class PlaylistAdapter : Adapter<PlaylistViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = PlaylistBinding.inflate(inflater, parent, false)
-        return PlaylistViewHolder(binding)
+        return PlaylistViewHolder(binding){ position ->
+            if (position != RecyclerView.NO_POSITION) {
+                playlists.getOrNull(position)?.let { playlistInfo ->
+                    onClick(playlistInfo.id)
+                }
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
