@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -60,7 +61,7 @@ class PlaylistFragment : Fragment() {
         }
 
         binding.playlistShareBtn.setOnClickListener {
-            playlistViewModel.sharePlaylist()
+            sharePlaylist()
         }
 
         binding.playlistMoreInfoBtn.setOnClickListener {
@@ -72,10 +73,13 @@ class PlaylistFragment : Fragment() {
         }
 
         binding.playlistShareTextBottomSheet.setOnClickListener {
-            playlistViewModel.sharePlaylist()
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            sharePlaylist()
         }
 
         binding.playlistEditTextBottomSheet.setOnClickListener {
+            menuBottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
             findNavController().navigate(
                 R.id.action_playlistFragment_to_editPlaylistFragment,
                 EditPlaylistFragment.createArgs(playlistId)
@@ -99,6 +103,17 @@ class PlaylistFragment : Fragment() {
                 AudioPlayerFragment.createArgs(it)
             )
         }
+    }
+
+    private fun sharePlaylist() {
+        // Норм ли такая проверка? Или как по ГОСТу делать
+        if (adapter.isEmpty()) {
+            val toastText = getString(R.string.playlist_no_tracks_to_share, playlistName)
+            Toast.makeText(requireContext(), toastText, Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        playlistViewModel.sharePlaylist()
     }
 
     private fun initAdapter() {

@@ -75,6 +75,8 @@
 
     <string name="playlist_delete_dialog_title" translatable="false">Хотите удалить плейлист "%s"?</string>
 
+    <string name="playlist_no_tracks_to_share" translatable="false">В плейлисте "%s" нет треков, которыми можно поделиться</string>
+
     <!-- Редактирование плейлиста-->
     <string name="edit_playlist_title" translatable="false">Редактировать</string>
     <string name="edit_playlist_save_btn_text" translatable="false">Сохранить</string>

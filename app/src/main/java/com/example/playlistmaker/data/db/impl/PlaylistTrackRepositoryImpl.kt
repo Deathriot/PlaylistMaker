@@ -22,8 +22,8 @@ class PlaylistTrackRepositoryImpl(
         val tracksId = gson.fromJson<ArrayList<Long>>(jsonIds, type)
 
         return database.getPlaylistTrackDao().getTracksByIds(tracksId).map {
-            it.map { playlistTrackEntity ->
-                PlaylistTrackEntityConvertor.convertToTrack(playlistTrackEntity)!!
+            it.mapNotNull { playlistTrackEntity ->
+                PlaylistTrackEntityConvertor.convertToTrack(playlistTrackEntity)
             }
         }.flowOn(Dispatchers.IO)
     }
