@@ -115,16 +115,10 @@ class AudioPlayerFragment : Fragment() {
 
             MediaPlayerState.STATE_PREPARED -> {
                 binding.playerPlayBtn.isEnabled = true
-                binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_play_btn_83)
+                binding.playerPlayBtn.pause()
             }
 
-            MediaPlayerState.STATE_PLAYING -> {
-                binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_pause_btn_83)
-            }
-
-            MediaPlayerState.STATE_PAUSED -> {
-                binding.playerPlayBtn.setImageResource(R.drawable.ic_audio_player_play_btn_83)
-            }
+            else -> {}
         }
     }
 
