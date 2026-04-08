@@ -9,7 +9,7 @@ import com.example.playlistmaker.domain.sharing.ExternalNavigator
 class ExternalNavigatorImpl(
     private val context: Context
 ) : ExternalNavigator {
-    override fun shareLink(url: String, title: String) {
+    override fun share(url: String, title: String) {
         val shareIntent = Intent().apply {
             type = TEXT_PLAIN
             putExtra(Intent.EXTRA_TEXT, url)

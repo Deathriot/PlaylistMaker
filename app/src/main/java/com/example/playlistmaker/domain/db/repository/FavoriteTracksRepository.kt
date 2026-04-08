@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain.db
+package com.example.playlistmaker.domain.db.repository
 
 import com.example.playlistmaker.domain.search.model.Track
 import kotlinx.coroutines.flow.Flow

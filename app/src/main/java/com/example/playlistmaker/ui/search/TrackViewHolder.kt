@@ -8,7 +8,7 @@ import com.example.playlistmaker.databinding.TrackBinding
 import com.example.playlistmaker.ui.search.model.TrackInfo
 import com.example.playlistmaker.ui.util.dpToPx
 
-class TrackViewHolder(
+open class TrackViewHolder(
     private val binding: TrackBinding,
     onClick: (position: Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {

@@ -1,5 +1,6 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.data.mapper.impl.PluralMapperImpl
 import com.example.playlistmaker.data.player.model.DefaultMediaPlayer
 import com.example.playlistmaker.data.search.TrackNetworkClient
 import com.example.playlistmaker.data.search.impl.TrackRetrofitITunesNetworkClient
@@ -8,6 +9,7 @@ import com.example.playlistmaker.data.settings.impl.DarkThemeInteractorImpl
 import com.example.playlistmaker.data.sharing.ExternalNavigatorImpl
 import com.example.playlistmaker.data.storage.ImageStorageClient
 import com.example.playlistmaker.data.storage.PrefsStorageClient
+import com.example.playlistmaker.domain.mapper.PluralMapper
 import com.example.playlistmaker.domain.player.model.AudioPlayer
 import com.example.playlistmaker.domain.search.model.Track
 import com.example.playlistmaker.domain.settings.DarkThemeInteractor
@@ -85,5 +87,9 @@ val dataModule = module {
 
     factory {
         SettingsConstants(androidContext())
+    }
+
+    factory<PluralMapper> {
+        PluralMapperImpl(get())
     }
 }

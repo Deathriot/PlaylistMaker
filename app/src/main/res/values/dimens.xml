@@ -3,7 +3,9 @@
     <dimen name="primary_text_size">22sp</dimen>
     <dimen name="minor_text_size">16sp</dimen>
     <dimen name="mini_text_size">11sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
     <dimen name="text_size_19">19sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="text_size_13">13sp</dimen>
     <dimen name="text_size_12">12sp</dimen>

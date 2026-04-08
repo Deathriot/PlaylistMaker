@@ -1,36 +1,46 @@
 package com.example.playlistmaker.domain.new_playlist.impl
 
 import android.net.Uri
-import com.example.playlistmaker.domain.db.PlaylistRepository
+import com.example.playlistmaker.domain.db.repository.PlaylistRepository
 import com.example.playlistmaker.domain.new_playlist.SavePlaylistUseCase
 import com.example.playlistmaker.domain.new_playlist.model.Playlist
 import com.example.playlistmaker.domain.storage.FileStorageClient
-import java.util.UUID
 
 class SavePlaylistUseCaseImpl(
     private val fileStorageClient: FileStorageClient,
     private val playlistRepository: PlaylistRepository
 ) : SavePlaylistUseCase {
-    override suspend fun execute(playList: Playlist) {
-        if (playList.coverUri != null) {
-            val coverFileName = UUID.randomUUID().toString()
-            fileStorageClient.createFile(coverFileName, playList.coverUri)
+    override suspend fun execute(playlist: Playlist) {
+        if (playlist.coverUri != null) {
+            fileStorageClient.createFile(playlist.coverUri)
                 .collect {
-                    playlistRepository.savePlaylist(changePlaylistUri(playList, it))
+                    playlistRepository.savePlaylist(changePlaylistUri(playlist, it))
                 }
         } else {
-            playlistRepository.savePlaylist(playList)
+            playlistRepository.savePlaylist(playlist)
+        }
+    }
+
+    override suspend fun update(playlist: Playlist, newCover: Uri?) {
+        if (newCover == null) {
+            playlistRepository.savePlaylist(playlist)
+            return
+        }
+
+        if (playlist.coverUri == null || playlist.coverUri.toString() == "null") {
+            fileStorageClient.createFile(newCover)
+                .collect {
+                    playlistRepository.savePlaylist(changePlaylistUri(playlist, it))
+                }
+        } else {
+            fileStorageClient.deleteFile(playlist.coverUri)
+            fileStorageClient.createFile(newCover).collect {
+                playlistRepository.savePlaylist(changePlaylistUri(playlist, it))
+            }
         }
     }
 
     private fun changePlaylistUri(playlist: Playlist, uri: Uri): Playlist {
-        return Playlist(
-            id = playlist.id,
-            name = playlist.name,
-            description = playlist.description,
-            coverUri = uri,
-            tracksIds = playlist.tracksIds,
-            trackCount = playlist.trackCount
-        )
+        return playlist.copy(coverUri = uri)
     }
 }

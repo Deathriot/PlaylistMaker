@@ -63,7 +63,8 @@ class AudioPlayerViewModel(
 
     fun addTrackToPlaylist(playlistId: Long, playlistName: String) {
         viewModelScope.launch {
-            val isAdded = addTrackToPlaylistUseCase.execute(playlistId, track.id).first()
+            val addedTrack = TrackDetailsInfoMapper.mapToTrack(track)
+            val isAdded = addTrackToPlaylistUseCase.execute(playlistId, addedTrack).first()
 
             isTrackAddedToPlaylist.postValue(
                 AddedToPlaylistState(

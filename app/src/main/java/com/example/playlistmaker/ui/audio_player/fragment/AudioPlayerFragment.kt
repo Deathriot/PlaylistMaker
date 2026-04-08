@@ -226,8 +226,6 @@ class AudioPlayerFragment : Fragment() {
     }
 
     private fun calculateOverlayAlpha(slideOffset: Float) {
-        // Такие сложности сделаны для того чтобы и дальше постепенно затемнять экран и во время того как
-        // тянем BottomSheet из collapsed к expanded, при этом сохраняя дизайн в тз
         when {
             slideOffset >= 0 -> {
                 val alpha = 0.6 + slideOffset * 0.4
