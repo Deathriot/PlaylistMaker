@@ -115,7 +115,7 @@ class AudioPlayerFragment : Fragment() {
 
             MediaPlayerState.STATE_PREPARED -> {
                 binding.playerPlayBtn.isEnabled = true
-                binding.playerPlayBtn.pause()
+                binding.playerPlayBtn.changeState(false)
             }
 
             else -> {}

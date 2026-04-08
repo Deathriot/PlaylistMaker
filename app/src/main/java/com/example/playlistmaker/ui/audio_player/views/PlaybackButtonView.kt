@@ -49,9 +49,11 @@ class PlaybackButtonView @JvmOverloads constructor(
         }
     }
 
-    fun pause(){
-        isPlaying = false
-        invalidate()
+    fun changeState(newState: Boolean) {
+        if (isPlaying != newState) {
+            isPlaying = newState
+            invalidate()
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
