@@ -13,7 +13,7 @@ object PlaylistEntityConvertor {
             tracksIds = playlistEntity.tracksIds,
             coverUri = playlistEntity.coverUri?.toUri(),
             trackCount = playlistEntity.trackCount
-        ) else return null
+        ) else null
     }
 
     fun convertToEntity(playlist: Playlist): PlaylistEntity {
@@ -22,7 +22,7 @@ object PlaylistEntityConvertor {
             name = playlist.name,
             description = playlist.description,
             tracksIds = playlist.tracksIds,
-            coverUri = playlist.coverUri.toString(),
+            coverUri = playlist.coverUri?.toString(),
             trackCount = playlist.trackCount
         )
     }

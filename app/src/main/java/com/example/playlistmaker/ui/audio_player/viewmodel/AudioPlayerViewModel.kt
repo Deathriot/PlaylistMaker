@@ -52,9 +52,10 @@ class AudioPlayerViewModel(
                 playerStateLiveData.postValue(playerState)
             },
             onCompletion = {
+                timerJob?.cancel()
                 playerState.mediaState = MediaPlayerState.STATE_PREPARED
+                playerState.timer = DEFAULT_TIMER_VALUE
                 playerStateLiveData.postValue(playerState)
-                resetTimer()
             })
 
         checkIsFavorite()
@@ -149,11 +150,6 @@ class AudioPlayerViewModel(
         startTimerUpdate()
     }
 
-    private fun resetTimer() {
-        playerState.timer = DEFAULT_TIMER_VALUE
-        playerStateLiveData.postValue(playerState)
-    }
-
     private fun pauseTimer() {
         timerJob?.cancel()
     }
@@ -172,7 +168,6 @@ class AudioPlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         playerInteractor.release()
-        resetTimer()
     }
 
     companion object {
