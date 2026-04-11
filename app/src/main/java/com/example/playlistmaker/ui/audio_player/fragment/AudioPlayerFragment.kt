@@ -22,8 +22,10 @@ import com.example.playlistmaker.ui.audio_player.viewmodel.AudioPlayerViewModel
 import com.example.playlistmaker.ui.media.model.PlaylistDetails
 import com.example.playlistmaker.ui.search.model.TrackDetailsInfo
 import com.example.playlistmaker.ui.util.dpToPx
+import com.example.playlistmaker.utils.broadcast_receiver.InternetConnectionBroadcastReceiver
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 import kotlin.math.abs
@@ -38,6 +40,8 @@ class AudioPlayerFragment : Fragment() {
 
     private var _binding: FragmentAudioPlayerBinding? = null
     private val binding get() = _binding!!
+
+    private val internetConnectionBroadcastReceiver : InternetConnectionBroadcastReceiver by inject()
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -64,7 +64,7 @@
     <string name="new_playlist_dialog_cancel_btn" translatable="false">Отмена</string>
     <string name="new_playlist_dialog_confirm_exit_btn" translatable="false">Завершить</string>
 
-    <!-- Экран плейлиста-->
+    <!-- Экран плейлиста -->
     <string name="playlist_delete_track_dialog_title" translatable="false">Хотите удалить трек?</string>
     <string name="playlist_delete_dialog_confirm_btn" translatable="false">Да</string>
     <string name="playlist_delete_dialog_negative_btn" translatable="false">Нет</string>
@@ -77,7 +77,10 @@
 
     <string name="playlist_no_tracks_to_share" translatable="false">В плейлисте "%s" нет треков, которыми можно поделиться</string>
 
-    <!-- Редактирование плейлиста-->
+    <!-- Редактирование плейлиста -->
     <string name="edit_playlist_title" translatable="false">Редактировать</string>
     <string name="edit_playlist_save_btn_text" translatable="false">Сохранить</string>
+
+    <!-- Прочее -->
+    <string name="no_internet_connection" translatable="false">Отсутствует подключение к интернету</string>
 </resources>
