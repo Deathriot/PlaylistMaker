@@ -1,6 +1,9 @@
 package com.example.playlistmaker.ui.search.fragment
 
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,6 +28,8 @@ import com.example.playlistmaker.ui.search.model.TrackInfo
 import com.example.playlistmaker.ui.search.viewmodel.SearchViewModel
 import com.example.playlistmaker.ui.search.viewmodel.model.SearchConstants
 import com.example.playlistmaker.ui.util.Debouncer
+import com.example.playlistmaker.utils.broadcast_receiver.InternetConnectionBroadcastReceiver
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -41,6 +46,8 @@ class SearchFragment : Fragment() {
     private lateinit var editText: EditText
     private lateinit var textWatcher: TextWatcher
     private lateinit var adapter: SearchTrackAdapter
+
+    private val internetConnectionBroadcastReceiver: InternetConnectionBroadcastReceiver by inject()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -247,9 +254,18 @@ class SearchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        requireActivity().registerReceiver(
+            internetConnectionBroadcastReceiver,
+            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        )
         editText.requestFocus()
         editText.setSelection(editText.text.length)
         searchViewModel.performSearch()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        requireActivity().unregisterReceiver(internetConnectionBroadcastReceiver)
     }
 
     override fun onDestroyView() {
