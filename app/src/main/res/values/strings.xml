@@ -43,6 +43,11 @@
     <string name="player_added_to_playlist" translatable="false">Добавлено в плейлист %s</string>
     <string name="player_already_added_to_playlist" translatable="false">Трек уже добавлен в плейлист %s</string>
 
+    <string name="player_dialog_notification_rationale_title" translatable="false">Разрешите присылать уведомления</string>
+    <string name="player_dialog_notification_rationale_message" translatable="false">Без этого разрешения вы не сможете слушать музыку на фоне</string>
+    <string name="player_dialog_notification_rationale_confirm_btn" translatable="false">разрешить</string>
+    <string name="player_dialog_notification_rationale_decline_btn" translatable="false">отказать</string>
+
     <!-- Медиатека -->
     <string name="media_title" translatable="false">Медиатека</string>
     <string name="media_favorite_tracks" translatable="false">Избранные треки</string>

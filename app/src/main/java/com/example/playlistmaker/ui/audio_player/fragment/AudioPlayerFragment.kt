@@ -1,36 +1,57 @@
 package com.example.playlistmaker.ui.audio_player.fragment
 
+import android.Manifest
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.ServiceConnection
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.FragmentAudioPlayerBinding
-import com.example.playlistmaker.domain.player.model.MediaPlayerState
 import com.example.playlistmaker.ui.audio_player.PlayerPlaylistAdapter
+import com.example.playlistmaker.ui.audio_player.model.PlayerState
 import com.example.playlistmaker.ui.audio_player.viewmodel.AudioPlayerViewModel
 import com.example.playlistmaker.ui.media.model.PlaylistDetails
 import com.example.playlistmaker.ui.search.model.TrackDetailsInfo
 import com.example.playlistmaker.ui.util.dpToPx
 import com.example.playlistmaker.utils.broadcast_receiver.InternetConnectionBroadcastReceiver
+import com.example.playlistmaker.utils.services.media_player_service.MediaPlayerService
+import com.example.playlistmaker.utils.services.media_player_service.converter.ServiceTrackDataConverter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.markodevcic.peko.PermissionRequester
+import com.markodevcic.peko.PermissionResult
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 import kotlin.math.abs
 
 class AudioPlayerFragment : Fragment() {
+
+    private var hasNotification = false
+    private var requester: PermissionRequester = PermissionRequester.instance()
 
     private lateinit var currentTrack: TrackDetailsInfo
     private lateinit var viewModel: AudioPlayerViewModel
@@ -41,14 +62,33 @@ class AudioPlayerFragment : Fragment() {
     private var _binding: FragmentAudioPlayerBinding? = null
     private val binding get() = _binding!!
 
-    private val internetConnectionBroadcastReceiver : InternetConnectionBroadcastReceiver by inject()
+    private val internetConnectionBroadcastReceiver: InternetConnectionBroadcastReceiver by inject()
+
+    private var mediaPlayerService: MediaPlayerService? = null
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MediaPlayerService.MediaPlayerServiceBinder
+            mediaPlayerService = binder.getService()
+            viewModel.setMediaPlayerControl(binder.getService())
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            viewModel.removeMediaPlayerControl()
+            mediaPlayerService = null
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        checkNotificationPermission()
         currentTrack = requireArguments().getParcelable(ARGS_TRACKS, TrackDetailsInfo::class.java)!!
+
         viewModel = getViewModel(parameters = { parametersOf(currentTrack) })
         viewModel.prepare()
+
+        bindMediaPlayerService()
 
         setBottomSheet()
         initAdapter()
@@ -57,10 +97,33 @@ class AudioPlayerFragment : Fragment() {
         setUI()
     }
 
+    private fun initClickListeners() {
+        with(binding) {
+            playerBackButton.setOnClickListener {
+                findNavController().navigateUp()
+            }
+
+            playerPlayBtn.setOnClickListener {
+                viewModel.changeState()
+            }
+
+            playerLikeBtn.setOnClickListener {
+                viewModel.changeLikeState()
+            }
+
+            playerAddPlaylistBtn.setOnClickListener {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+            playerBottomSheetAddPlaylist.setOnClickListener {
+                findNavController().navigate(R.id.action_audioPlayerFragment_to_newPlaylistFragment)
+            }
+        }
+    }
+
     private fun setObservers() {
         viewModel.observePlayerState().observe(viewLifecycleOwner) {
-            onMediaState(it.mediaState)
-            onTimer(it.timer)
+            onPlayerState(it.playerState)
             onLike(it.isLiked)
         }
 
@@ -86,6 +149,19 @@ class AudioPlayerFragment : Fragment() {
         }
     }
 
+    private fun bindMediaPlayerService() {
+        val intent = Intent(requireContext(), MediaPlayerService::class.java).apply {
+            val serviceTrackData = ServiceTrackDataConverter.convertToServiceTrackData(currentTrack)
+            putExtra(MediaPlayerService.SERVICE_TRACK_ARGS, serviceTrackData)
+        }
+
+        requireContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    private fun unBindMediaPlayerService() {
+        requireContext().unbindService(serviceConnection)
+    }
+
     private fun initAdapter() {
         adapter = PlayerPlaylistAdapter(this::onPlaylistClick)
         binding.playerBottomSheetRecycleView.adapter = adapter
@@ -107,23 +183,16 @@ class AudioPlayerFragment : Fragment() {
         }
     }
 
-    private fun onTimer(timer: String) {
-        binding.playerTrackCurrentTime.text = timer
-    }
+    private fun onPlayerState(playerState: PlayerState) {
+        binding.playerTrackCurrentTime.text = playerState.progress
+        binding.playerPlayBtn.isEnabled = playerState.enabled
 
-    private fun onMediaState(mediaState: MediaPlayerState) {
-        when (mediaState) {
-            MediaPlayerState.STATE_DEFAULT -> {
-                binding.playerPlayBtn.isEnabled = false
-            }
-
-            MediaPlayerState.STATE_PREPARED -> {
-                binding.playerPlayBtn.isEnabled = true
-                binding.playerPlayBtn.changeState(false)
-            }
-
-            else -> {}
+        if (playerState is PlayerState.Playing) {
+            binding.playerPlayBtn.changeState(true)
+        } else {
+            binding.playerPlayBtn.changeState(false)
         }
+
     }
 
     private fun setUI() {
@@ -175,29 +244,6 @@ class AudioPlayerFragment : Fragment() {
         }
     }
 
-    private fun initClickListeners() {
-        with(binding) {
-            playerBackButton.setOnClickListener {
-                findNavController().navigateUp()
-            }
-
-            playerPlayBtn.setOnClickListener {
-                viewModel.changeState()
-            }
-
-            playerLikeBtn.setOnClickListener {
-                viewModel.changeLikeState()
-            }
-
-            playerAddPlaylistBtn.setOnClickListener {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            }
-
-            playerBottomSheetAddPlaylist.setOnClickListener {
-                findNavController().navigate(R.id.action_audioPlayerFragment_to_newPlaylistFragment)
-            }
-        }
-    }
 
     private fun setBottomSheet() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.playerBottomSheet).apply {
@@ -237,6 +283,44 @@ class AudioPlayerFragment : Fragment() {
         }
     }
 
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            hasNotification = requester.isAnyGranted(Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            hasNotification = true
+        }
+
+        getNotificationPermission()
+    }
+
+    private fun getNotificationPermission() {
+        if (!hasNotification) {
+            lifecycleScope.launch {
+                val result = requester.request(Manifest.permission.POST_NOTIFICATIONS).first()
+                when (result) {
+                    is PermissionResult.Granted -> hasNotification = true
+                    is PermissionResult.Denied.NeedsRationale -> createRationalNotificationDialog()
+
+                    is PermissionResult.Denied.DeniedPermanently -> {}
+                    PermissionResult.Cancelled -> {}
+                }
+            }
+        }
+    }
+
+
+    private fun createRationalNotificationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.player_dialog_notification_rationale_title))
+            .setMessage(getString(R.string.player_dialog_notification_rationale_message))
+            .setPositiveButton(getString(R.string.player_dialog_notification_rationale_confirm_btn)) { _, _ ->
+                getNotificationPermission()
+            }
+            .setNegativeButton(getString(R.string.player_dialog_notification_rationale_decline_btn)) { _, _ ->
+
+            }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -246,20 +330,30 @@ class AudioPlayerFragment : Fragment() {
         return binding.root
     }
 
-    override fun onPause() {
-        super.onPause()
-        viewModel.pause()
+    override fun onResume() {
+        super.onResume()
+        mediaPlayerService?.stopForeGround()
+        requireActivity().registerReceiver(
+            internetConnectionBroadcastReceiver,
+            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        )
     }
 
-    override fun onStop() {
-        super.onStop()
-        viewModel.pause()
+    override fun onPause() {
+        super.onPause()
+        if (hasNotification) {
+            mediaPlayerService?.startForeground()
+        } else {
+            mediaPlayerService?.releasePlayer()
+        }
+
+        requireActivity().unregisterReceiver(internetConnectionBroadcastReceiver)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.release()
         bottomSheetBehavior.removeBottomSheetCallback(bottomSheetCallback)
+        unBindMediaPlayerService()
         _binding = null
     }
 

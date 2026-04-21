@@ -4,7 +4,8 @@ import android.media.MediaPlayer
 import com.example.playlistmaker.domain.player.model.AudioPlayer
 
 class DefaultMediaPlayer : AudioPlayer {
-    private val mediaPlayer = MediaPlayer()
+    private var _mediaPlayer: MediaPlayer? = MediaPlayer()
+    private val mediaPlayer = _mediaPlayer!!
 
     override fun getCurrentTrackTime(): Int {
         return mediaPlayer.currentPosition
@@ -32,6 +33,9 @@ class DefaultMediaPlayer : AudioPlayer {
     }
 
     override fun release() {
+        mediaPlayer.setOnPreparedListener(null)
+        mediaPlayer.setOnCompletionListener(null)
         mediaPlayer.release()
+        _mediaPlayer = null
     }
 }
