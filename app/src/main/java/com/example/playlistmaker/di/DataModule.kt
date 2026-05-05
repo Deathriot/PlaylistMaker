@@ -58,7 +58,7 @@ val dataModule = module {
     }
 
     single<TrackNetworkClient> {
-        TrackRetrofitITunesNetworkClient(get())
+        TrackRetrofitITunesNetworkClient(get(), get())
     }
 
     single<ITunesApi> {
