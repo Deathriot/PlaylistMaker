@@ -20,8 +20,8 @@ class PlaylistsViewModel(
     private val playlists = MutableLiveData<List<PlaylistDetails>>()
     fun observePlaylists(): LiveData<List<PlaylistDetails>> = playlists
 
-    private val clickedPlaylist = SingleLiveEvent<Long>()
-    fun observeClickedPlaylist(): LiveData<Long> = clickedPlaylist
+    private val clickedPlaylist = MutableLiveData<Long?>()
+    fun observeClickedPlaylist(): LiveData<Long?> = clickedPlaylist
 
     fun loadPlaylists() {
         viewModelScope.launch {
@@ -37,5 +37,9 @@ class PlaylistsViewModel(
 
     fun onPlaylistClick(playlistId: Long) {
         clickedPlaylist.postValue(playlistId)
+    }
+
+    fun onPlaylistClickedConsumed(){
+        clickedPlaylist.value = null
     }
 }

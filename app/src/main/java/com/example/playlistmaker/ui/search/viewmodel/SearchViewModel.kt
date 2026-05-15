@@ -33,8 +33,8 @@ class SearchViewModel(
     private val inputValue = MutableLiveData<EditTextState>()
     fun observeEditTextValue(): LiveData<EditTextState> = inputValue
 
-    private val trackDetails = SingleLiveEvent<TrackDetailsInfo>()
-    fun observeOnTrackClick(): LiveData<TrackDetailsInfo> = trackDetails
+    private val trackDetails = MutableLiveData<TrackDetailsInfo?>()
+    fun observeOnTrackClick(): LiveData<TrackDetailsInfo?> = trackDetails
 
     private val historyTracks = MutableLiveData(getHistoryTracks())
     fun observeHistory(): LiveData<List<TrackInfo>> = historyTracks
@@ -58,6 +58,10 @@ class SearchViewModel(
                     processResult(it)
                 }
         }
+    }
+
+    fun resetClickedTrack() {
+        trackDetails.value = null
     }
 
     fun onTextChanged(s: CharSequence?) {
@@ -121,6 +125,7 @@ class SearchViewModel(
 
     fun clearHistory() {
         historyInteractor.clearTracks()
+        historyTracks.postValue(emptyList())
     }
 
     companion object {

@@ -4,109 +4,72 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.FragmentFavoriteTracksBinding
 import com.example.playlistmaker.ui.audio_player.fragment.AudioPlayerFragment
 import com.example.playlistmaker.ui.media.viewmodel.FavoriteTracksViewModel
-import com.example.playlistmaker.ui.root.activity.RootActivity
+import com.example.playlistmaker.ui.search.fragment.TrackItem
+import com.example.playlistmaker.ui.search.model.TrackDetailsInfo
 import com.example.playlistmaker.ui.search.model.TrackInfo
-import com.example.playlistmaker.ui.util.Debouncer
 import com.example.playlistmaker.ui.util.State
-import com.example.playlistmaker.ui.util.adapter.TrackAdapter
+import com.example.playlistmaker.ui.util.theme.AppDimens
+import com.example.playlistmaker.ui.util.theme.AppTextStyles
+import com.example.playlistmaker.ui.util.theme.AppTheme
+import com.example.playlistmaker.ui.util.theme.colors
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
 
-    private var _binding: FragmentFavoriteTracksBinding? = null
-    private val binding get() = _binding!!
-
     private val favoriteTracksViewModel: FavoriteTracksViewModel by viewModel()
-    private lateinit var adapter: TrackAdapter
-    private lateinit var onTrackClickDebounce: (Long) -> Unit
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initAdapter()
-        setObservers()
-    }
-
-    private fun setObservers() {
-        favoriteTracksViewModel.observeState().observe(viewLifecycleOwner) {
-            render(it)
-        }
-
-        favoriteTracksViewModel.observeTrackDetails().observe(viewLifecycleOwner){
-            findNavController().navigate(
-                R.id.action_mediaFragment_to_audioPlayerFragment,
-                AudioPlayerFragment.createArgs(it)
-            )
-        }
-    }
-
-    private fun render(state: State) {
-        when (state) {
-            is State.Empty -> {
-                showPlaceHolder()
-            }
-
-            is State.Content<*> -> {
-                adapter.setNewTracks(state.data as List<TrackInfo>)
-                showContent()
-            }
-
-            is State.Error -> {
-
-            }
-
-            State.Loading -> {
-
-            }
-        }
-    }
-
-    private fun showPlaceHolder() {
-        binding.favTracksPlaceholder.isVisible = true
-        binding.mediaFavTracksRecycleView.isVisible = false
-    }
-
-    private fun showContent() {
-        binding.favTracksPlaceholder.isVisible = false
-        binding.mediaFavTracksRecycleView.isVisible = true
-    }
-
-    private fun initAdapter() {
-        onTrackClickDebounce =
-            Debouncer.debounce(
-                RootActivity.BOTTOM_NAV_ANIMATION_DURATION,
-                viewLifecycleOwner.lifecycleScope, false
-            ) { trackId ->
-                onTrackClick(trackId)
-            }
-
-        adapter = TrackAdapter{
-            id -> onTrackClickDebounce(id)
-        }
-
-        binding.mediaFavTracksRecycleView.adapter = adapter
-    }
-
-    private fun onTrackClick(id: Long) {
-        favoriteTracksViewModel.onTrackClicked(id)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFavoriteTracksBinding.inflate(inflater, container, false)
-        return binding.root
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AppTheme(isSystemInDarkTheme()) {
+                    FavoriteTracksScreenContent(
+                        viewModel = favoriteTracksViewModel,
+                        onTrackClick = { trackDetailsInfo ->
+                            findNavController().navigate(
+                                R.id.action_mediaFragment_to_audioPlayerFragment,
+                                AudioPlayerFragment.createArgs(trackDetailsInfo)
+                            )
+                        }
+                    )
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -114,12 +77,83 @@ class FavoriteTracksFragment : Fragment() {
         favoriteTracksViewModel.loadTracks()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
-
     companion object {
         fun newInstance() = FavoriteTracksFragment()
+    }
+}
+
+@Composable
+fun FavoriteTracksScreenContent(
+    viewModel: FavoriteTracksViewModel,
+    onTrackClick: (TrackDetailsInfo) -> Unit
+) {
+    val state by viewModel.observeState().observeAsState()
+    val trackClickEvent by viewModel.observeTrackDetails().observeAsState()
+
+    LaunchedEffect(trackClickEvent) {
+        trackClickEvent?.let { trackDetailsInfo ->
+            onTrackClick(trackDetailsInfo)
+            viewModel.onTrackClickedConsumed()
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = AppDimens.normalPadding)
+    ) {
+        when (state) {
+            is State.Content<*> -> {
+                val tracks = (state as State.Content<*>).data as List<TrackInfo>
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(
+                        items = tracks,
+                        key = { it.id }
+                    ) { track ->
+                        TrackItem(
+                            track = track,
+                            onClick = { viewModel.onTrackClicked(track.id) }
+                        )
+                    }
+                }
+            }
+
+            else -> {
+                PlaceholderLayout()
+            }
+        }
+    }
+}
+
+@Composable
+fun PlaceholderLayout() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(AppDimens.normalPadding),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Spacer(modifier = Modifier.weight(0.2f))
+
+        Icon(
+            painter = painterResource(R.drawable.no_tracks_found_placeholder),
+            contentDescription = null,
+            modifier = Modifier.size(120.dp),
+            tint = Color.Unspecified
+        )
+
+        Spacer(modifier = Modifier.height(AppDimens.normalPadding))
+
+        Text(
+            text = stringResource(R.string.media_is_empty),
+            style = AppTextStyles.searchPlaceholder,
+            color = colors().colorOnSecondary,
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.weight(0.8f))
     }
 }

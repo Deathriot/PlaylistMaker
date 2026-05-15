@@ -25,8 +25,8 @@ class FavoriteTracksViewModel(
     private val state = MutableLiveData<State>()
     fun observeState(): LiveData<State> = state
 
-    private val trackDetails = SingleLiveEvent<TrackDetailsInfo>()
-    fun observeTrackDetails(): LiveData<TrackDetailsInfo> = trackDetails
+    private val trackDetails = SingleLiveEvent<TrackDetailsInfo?>()
+    fun observeTrackDetails(): LiveData<TrackDetailsInfo?> = trackDetails
 
     fun onTrackClicked(id: Long) {
         viewModelScope.launch {
@@ -55,5 +55,9 @@ class FavoriteTracksViewModel(
                 }
             }
         }
+    }
+
+    fun onTrackClickedConsumed(){
+        trackDetails.value = null
     }
 }

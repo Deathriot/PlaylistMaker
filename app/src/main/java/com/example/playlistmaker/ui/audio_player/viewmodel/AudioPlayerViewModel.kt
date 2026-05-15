@@ -109,6 +109,8 @@ class AudioPlayerViewModel(
 
     private fun checkIsFavorite() {
         if (track.isFavorite) {
+            totalPlayerState.isLiked = true
+            playerStateLiveData.postValue(totalPlayerState)
             return
         }
 
