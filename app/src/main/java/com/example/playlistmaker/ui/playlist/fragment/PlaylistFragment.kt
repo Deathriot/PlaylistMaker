@@ -106,7 +106,6 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun sharePlaylist() {
-        // Норм ли такая проверка? Или как по ГОСТу делать
         if (adapter.isEmpty()) {
             val toastText = getString(R.string.playlist_no_tracks_to_share, playlistName)
             Toast.makeText(requireContext(), toastText, Toast.LENGTH_SHORT).show()

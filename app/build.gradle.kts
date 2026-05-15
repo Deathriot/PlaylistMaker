@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("kotlin-parcelize")
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -41,6 +42,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    composeOptions{
+        kotlinCompilerExtensionVersion = "1.5.9"
+    }
 }
 
 
@@ -50,6 +54,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -59,6 +64,7 @@ dependencies {
     ksp(libs.glide.ksp)
 
     implementation(libs.gson)
+
     implementation(libs.retrofit)
 
     implementation(libs.androidx.activity.ktx)
@@ -76,7 +82,14 @@ dependencies {
     implementation(libs.coroutines)
 
     ksp(libs.room.compiler)
+
     implementation(libs.room.ktx)
     implementation(libs.room.runtime)
+
     implementation(libs.peko)
+
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.compose.livedata)
+    implementation(libs.compose.coil)
 }
